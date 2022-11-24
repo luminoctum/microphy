@@ -1,4 +1,4 @@
-/** @file thermodynamic_funcs.hpp
+/** @file moist_thermodynamic.hpp
  * @brief
  *
  * @author Cheng Li (chengcli@umich.edu)
@@ -6,15 +6,15 @@
  * @bug No known bugs.
  */
 
-#ifndef THERMODYNAMICS_FUNCS_HPP
-#define THERMODYNAMICS_FUNCS_HPP
+#ifndef MOIST_THERMODYNAMICS_HPP
+#define MOIST_THERMODYNAMICS_HPP
 
-#include "thermodynamics.hpp"
+#include "gasphase.hpp"
 //#include "../particles/particles.hpp"
 
 //! Potential temperature
 template<typename T>
-Real PotentialTemp(T w, Real p0, Thermodynamics const *pthermo) {
+Real PotentialTemp(T w, Real p0, GasPhase const *pthermo) {
   Real chi = pthermo->getChi(w);
   Real temp = pthermo->getTemp(w);
   return temp*pow(p0/w[IPR], chi);
@@ -22,7 +22,7 @@ Real PotentialTemp(T w, Real p0, Thermodynamics const *pthermo) {
 
 //! Moist static energy
 template<typename T>
-Real MoistStaticEnergy(T w, Real gz, Thermodynamics const *pthermo) {
+Real MoistStaticEnergy(T w, Real gz, GasPhase const *pthermo) {
   Real temp = pthermo->getTemp(w);
   Real IE = w[IDN]*pthermo->getSpecificCp(w)*temp;
   Real rho = w[IDN];
@@ -41,7 +41,7 @@ Real MoistStaticEnergy(T w, Real gz, Thermodynamics const *pthermo) {
 
 //! Relative humidity
 template<typename T>
-Real RelativeHumidity(T w, int iv, Thermodynamics const *pthermo) {
+Real RelativeHumidity(T w, int iv, GasPhase const *pthermo) {
   Real dw[1+NumVapors];
   pthermo->SaturationSurplus(dw, w, VariableType::prim);
   return w[iv]/(w[iv] - dw[iv]);
@@ -52,7 +52,7 @@ Real RelativeHumidity(T w, int iv, Thermodynamics const *pthermo) {
 // theta_l = theta - theta/T*Lv/cpd*ql
 template<typename T>
 Real LiquidWaterPotentialTemp(T w, Real p0, Real lv_ov_cpd, Real qliq,
-  Thermodynamics const *pthermo) {
+  GasPhase const *pthermo) {
   Real theta = PotentialTemp(w, p0, pthermo);
   Real temp = pthermo->getTemp(w);
   return theta - theta/temp*lv_ov_cpd*qliq;
