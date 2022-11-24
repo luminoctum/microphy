@@ -31,7 +31,7 @@ GasPhase::GasPhase(MeshBlock *pmb, ParameterInput *pin):
   peos_(pmb->peos), Tref_(pin->GetOrAddReal("hydro", "Tref", 300.))
 {
   pdebug->Enter("GasPhase");
-  std::string str = pin->GetOrAddString("hydro", "vapors", "Dummy");
+  std::string str = pin->GetOrAddString("hydro", "vapors", "Dummy:1.");
   std::vector<std::string> names = Vectorize<std::string>(str.c_str(), ", ");
 
   if (names.size() <= NumVapors) {
