@@ -1,0 +1,9 @@
+[submodule "athenapp"]
+	path = athenapp
+	url = https://github.com/chengcli/athenapp
+[submodule "debugger"]
+	path = debugger
+	url = https://github.com/chengcli/debugger
+[submodule "molecule"]
+	path = molecule
+	url = https://github.com/chengcli/molecule

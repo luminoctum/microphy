@@ -1,0 +1,44 @@
+<job>
+problem_id    = adiabatic_atm  # problem ID: basename of output filenames
+
+<output1>
+file_type     = tab       # Tabular data dump
+variable      = prim      # variables to be output
+dt            = 0.01      # time increment between outputs
+
+<time>
+cfl_number    = 1.0       # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim          = -1        # cycle limit
+tlim          = 0.25      # time limit
+ncycle_out    = 1         # interval for stdout summary info
+
+<mesh>
+nx1           = 10        # Number of zones in X1-direction
+x1min         = -200.E3   # minimum value of X1
+x1max         = 50.E3     # maximum value of X1
+ix1_bc        = outflow   # Inner-X1 boundary condition flag
+ox1_bc        = outflow   # Outer-X1 boundary condition flag
+
+nx2           = 1         # Number of zones in X2-direction
+x2min         = -0.5      # minimum value of X2
+x2max         = 0.5       # maximum value of X2
+ix2_bc        = periodic  # Inner-X2 boundary condition flag
+ox2_bc        = periodic  # Outer-X2 boundary condition flag
+
+nx3           = 1         # Number of zones in X3-direction
+x3min         = -0.5      # minimum value of X3
+x3max         = 0.5       # maximum value of X3
+ix3_bc        = periodic  # Inner-X3 boundary condition flag
+ox3_bc        = periodic  # Outer-X3 boundary condition flag
+
+<hydro>
+gamma         = 1.4   # gamma = C_p/C_v
+vapors        = H2:1.0;He:0.157;CH4:2.37E-3, H2O, NH3
+clouds        = H2O(l), H2O(s), NH3(l), NH3(s)
+precipitates  = H2O(l):rain, H2O(s):snow, NH3(l):rain, NH3(s):snow
+
+<problem>
+Ts            = 600.
+Ps            = 100.E5
+qH2O          = 0.2
+qNH3          = 0.1
