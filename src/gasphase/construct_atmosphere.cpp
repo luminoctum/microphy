@@ -67,11 +67,11 @@ void GasPhase::ConstructAtmosphere(Real **w, Real Ts, Real Ps,
     int niter = 0;
 #if HYDROSTATIC
     rdlnTdlnP = userp;
-    rk4_integrate_lnp_adaptive(q1, isat, thermo_, gamma,
+    rk4_integrate_lnp_adaptive(q1, isat, thermo_, moist_, gamma,
       dzORdlnp, ftol_, niter, (int)method, rdlnTdlnP);
 #else
     adTdz = userp;
-    rk4_integrate_z_adaptive(q1, isat, thermo_, gamma,
+    rk4_integrate_z_adaptive(q1, isat, thermo_, moist_, gamma,
       grav/Rd_, dzORdlnp, ftol_, niter, (int)method, adTdz);
 #endif
 

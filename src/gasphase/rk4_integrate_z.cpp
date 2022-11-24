@@ -10,8 +10,9 @@
 
 int const max_iter_ = 10;
 
-void rk4_integrate_z(Real q[], int isat[], GasThermo const thermo[],
-  Molecule const moist[], Real gamma, Real g_ov_Rd, Real dz, int method, Real adTdz)
+void rk4_integrate_z(Real q[], int isat[], 
+  GasThermo const thermo[], Molecule const moist[],
+  Real gamma, Real g_ov_Rd, Real dz, int method, Real adTdz)
 {
   Real step[] = {0.5, 0.5, 1.};
   Real temp = q[idn];

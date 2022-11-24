@@ -9,8 +9,9 @@
 
 int const max_iter_ = 10;
 
-void rk4_integrate_lnp(Real q[], int isat[], GasThermo const thermo[], 
-  Molecule const moist[], Real gamma, Real dlnp, int method, Real rdlnTdlnP)
+void rk4_integrate_lnp(Real q[], int isat[],
+  GasThermo const thermo[], Molecule const moist[],
+  Real gamma, Real dlnp, int method, Real rdlnTdlnP)
 {
   Real step[] = {0.5, 0.5, 1.};
   Real temp = q[idn];
