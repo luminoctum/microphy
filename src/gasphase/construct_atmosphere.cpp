@@ -10,11 +10,7 @@
 #include <iostream>
 #include <cstdlib>
 
-// Athena++ headers
-//#include <athena_arrays.hpp>
-//#include <hydro/hydro.hpp>
-
-// canoe
+#include <debugger.hpp>
 #include <configure.hpp>
 #include "gasphase.hpp"
 #include "construct_atmosphere.hpp"
@@ -24,6 +20,7 @@
 void GasPhase::ConstructAtmosphere(Real **w, Real Ts, Real Ps,
   Real grav, Real dzORdlnp, int len, Adiabat method, Real userp) const
 {
+  pdebug->Call("Constructing atmosphere");
   Real gamma = peos_->getGamma();
 
   Real q1[NumHydros];
@@ -56,7 +53,7 @@ void GasPhase::ConstructAtmosphere(Real **w, Real Ts, Real Ps,
     // normalization
     for (int iv = 1; iv <= NumVapors; ++iv)
       q1[iv] /= sum;
-  } while (std::abs(sum - 1.) < 1.E-10);
+  } while (std::abs(sum - 1.) > 1.E-10);
 
   // set vapor
   ChemicalToPrimitive(w[0], q1);

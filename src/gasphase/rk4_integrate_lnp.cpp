@@ -55,7 +55,7 @@ void rk4_integrate_lnp(Real q[], int isat[],
     // normalization
     for (int iv = 1; iv <= NumVapors; ++iv)
       q[iv] /= sum;
-  } while (std::abs(sum - 1.) < 1.E-10);
+  } while (std::abs(sum - 1.) > 1.E-10);
 }
 
 void rk4_integrate_lnp_adaptive(Real q[], int isat[], GasThermo const thermo[],
