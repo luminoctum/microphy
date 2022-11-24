@@ -28,6 +28,7 @@ foreach(build ${BUILD_TYPES})
     ${ATHENAPP_INCLUDE_DIR}
     ${DEBUGGER_INCLUDE_DIR}
     ${MOLECULE_INCLUDE_DIR}
+    ${MPI_CXX_INCLUDE_PATH}
     ${CMAKE_BINARY_DIR}
     )
 
@@ -35,6 +36,7 @@ foreach(build ${BUILD_TYPES})
     ${ATHENAPP_LIBRARY_${build}}
     ${DEBUGGER_LIBRARY_${build}}
     ${MOLECULE_LIBRARY_${build}}
+    ${MPI_CXX_LIBRARIES}
     )
 
   set(CONDENSE_LIBRARY_${build} condense_${buildl}
