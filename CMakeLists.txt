@@ -71,3 +71,4 @@ add_subdirectory(src)
 
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   add_subdirectory(tests)
+endif()
