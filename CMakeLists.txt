@@ -68,4 +68,6 @@ message(STATUS "Set up project complication and installation ...")
 configure_file(${CMAKE_SOURCE_DIR}/configure.hpp.in configure.hpp @ONLY)
 
 add_subdirectory(src)
-add_subdirectory(tests)
+
+if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+  add_subdirectory(tests)
