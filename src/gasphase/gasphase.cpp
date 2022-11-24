@@ -85,6 +85,7 @@ GasPhase::GasPhase(MeshBlock *pmb, ParameterInput *pin):
     Rd_ = pin->GetReal("hydro", "Rd");
   } else {
     Rd_ = Constants::Rgas/dry_.mu;
+    pin->GetOrAddReal("hydro", "Rd", Rd_);
   }
 
   ftol_ = pin->GetOrAddReal("hydro", "ftol", 1.0E-4);
