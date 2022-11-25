@@ -14,12 +14,17 @@ inline Real condense_vapor(Real const xmol[], int iv, Molecule const& moist)
   Real xv = xmol[iv];
   Real s = moist.svp(xmol[idn])/xmol[ipr];
 
+  if (s > 1.) return 0.;
+
   Real g = 1. - xv;
   Real s1 = s/(1. - s);
   Real rate = xv - s1*g;
 
   // condensate at most xv vapor
-  if (rate > 0.) rate = std::min(rate, xv);
+  if (rate > 0.) {
+    rate = std::min(rate, xv);
+  } else
+    rate = 0.;
 
   return rate;
 }

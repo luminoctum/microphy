@@ -28,9 +28,6 @@ void GasPhase::ConstructAtmosphere(Real **w, Real Ts, Real Ps,
   w[0][idn] = w[0][ipr] = 1.;
   PrimitiveToChemical(q1, w[0]);
 
-  // change molar concentration to mixing ratio
-  Real mols = q1[ipr]/(q1[idn]*Constants::Rgas);
-  for (int n = 1; n <= NumVapors; ++n) q1[n] /= mols;
   // reset TP
   q1[idn] = Ts;
   q1[ipr] = Ps;
@@ -62,6 +59,7 @@ void GasPhase::ConstructAtmosphere(Real **w, Real Ts, Real Ps,
     // RK4 integration 
     Real rdlnTdlnP, adTdz;
     int niter = 0;
+
 #if HYDROSTATIC
     rdlnTdlnP = userp;
     rk4_integrate_lnp_adaptive(q1, isat, thermo_, moist_, gamma,

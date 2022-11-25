@@ -22,10 +22,9 @@ inline void GasPhase::PrimitiveToChemical(T1 qmol, T2 const w) const
   qmol[iv2] = w[iv2];
   qmol[iv3] = w[iv3];
 
-  Real mols = qmol[ipr]/(qmol[idn]*Constants::Rgas);
 #pragma omp simd
   for (int n = 1; n <= NumVapors; ++n) {
-    qmol[n] *= mols/sum;
+    qmol[n] /= sum;
   }
 }
 
@@ -33,10 +32,10 @@ inline void GasPhase::PrimitiveToChemical(T1 qmol, T2 const w) const
 template<typename T1, typename T2>
 inline void GasPhase::ChemicalToPrimitive(T1 w, T2 const qmol) const {
   // set mass mixing ratio
-  Real sum = 1., mols = qmol[ipr]/(qmol[idn]*Constants::Rgas);
+  Real sum = 1.;
   for (int n = 1; n <= NumVapors; ++n) {
-    w[n] = qmol[n]/mols*thermo_[n].mu_ratio;
-    sum += qmol[n]/mols*(thermo_[n].mu_ratio - 1.); 
+    w[n] = qmol[n]*thermo_[n].mu_ratio;
+    sum += qmol[n]*(thermo_[n].mu_ratio - 1.); 
   }
 #pragma omp simd
   for (int n = 1; n <= NumVapors; ++n)
