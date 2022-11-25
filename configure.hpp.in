@@ -33,6 +33,7 @@ enum {
 // size of array
 enum {
   NumVapors = @NumVapors@,
+  NumScalars = @NumScalars@,
 };
 
 // derived sizes
@@ -64,7 +65,8 @@ namespace Globals {
 }
 
 enum {
-  ReferenceCloudPhase = @ReferenceCloudPhase@
+  ReferenceCloudPhase = @ReferenceCloudPhase@,
+  MaxReactants = 5
 };
 
 // hydrostatic flag

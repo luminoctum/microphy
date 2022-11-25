@@ -7,3 +7,6 @@
 [submodule "molecule"]
 	path = molecule
 	url = https://github.com/chengcli/molecule
+[submodule "climath"]
+	path = climath
+	url = https://github.com/chengcli/climath

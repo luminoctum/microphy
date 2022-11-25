@@ -12,6 +12,8 @@
 
 file(GLOB _src_files 
   gasphase/*.cpp
+  cldphase/*.cpp
+  reaction/*.cpp
   )
 
 foreach(build ${BUILD_TYPES})
@@ -26,6 +28,7 @@ foreach(build ${BUILD_TYPES})
   target_include_directories(condense_${buildl}
     SYSTEM PRIVATE
     ${ATHENAPP_INCLUDE_DIR}
+    ${CLIMATH_INCLUDE_DIR}
     ${DEBUGGER_INCLUDE_DIR}
     ${MOLECULE_INCLUDE_DIR}
     ${MPI_CXX_INCLUDE_PATH}
@@ -34,6 +37,7 @@ foreach(build ${BUILD_TYPES})
 
   target_link_libraries(condense_${buildl}
     ${ATHENAPP_LIBRARY_${build}}
+    ${CLIMATH_LIBRARY_${build}}
     ${DEBUGGER_LIBRARY_${build}}
     ${MOLECULE_LIBRARY_${build}}
     ${MPI_CXX_LIBRARIES}

@@ -13,7 +13,7 @@
 #include <debugger.hpp>
 #include <molecule/molecules.hpp>
 #include "gasphase.hpp"
-#include "vectorize.hpp"
+#include "../vectorize.hpp"
 
 std::ostream& operator<<(std::ostream& os, GasPhase const& my)
 {
@@ -45,7 +45,7 @@ GasPhase::GasPhase(MeshBlock *pmb, ParameterInput *pin):
   // temporary clouds
   Molecule clouds[1+NumVapors];
 
-  // vapors and solids
+  // vapors
   for (int i = 1; i <= NumVapors; ++i) {
     if (names[i] == "H2O") {
       moist_[i] = Water<0>();

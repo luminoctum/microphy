@@ -45,6 +45,11 @@ endif()
 message(STATUS "")
 message(STATUS "Set up project external libraries ...")
 
+# compile climath
+if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+  add_subdirectory(climath)
+endif()
+
 # compile debugger
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   add_subdirectory(debugger)
