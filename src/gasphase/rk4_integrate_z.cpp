@@ -4,7 +4,7 @@
 
 #include <molecule/molecule.hpp>
 #include "construct_atmosphere.hpp"
-#include "gasphase.hpp"
+#include "gas_phase.hpp"
 #include "dlnT_dlnP.hpp"
 #include "condense_vapor.hpp"
 

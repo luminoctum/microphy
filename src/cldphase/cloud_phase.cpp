@@ -18,27 +18,19 @@ std::ostream& operator<<(std::ostream& os, CloudPhase const& my)
   return os;
 }
 
-CloudPhase::CloudPhase(MeshBlock *pmb, ParameterInput *pin):
-  ns_(Globals::next_scalar_index), active_(false)
+CloudPhase::CloudPhase(MeshBlock *pmb, ParameterInput *pin)
 {
-  pdebug->Enter("CloudPhase");
   if (!pin->DoesParameterExist("hydro", "clouds")) {
     pdebug->Leave();
     return;
   }
 
-  active_ = true;
-
   std::string str = pin->GetString("hydro", "clouds");
   std::vector<std::string> names = Vectorize<std::string>(str.c_str(), ", ");
 
-  Globals::next_scalar_index += names.size();
-  ne_ = Globals::next_scalar_index - 1;
-
-  if (ne_ >= NumScalars) {
-    Debugger::Fatal("CloudPhase", "Number of scalars less than",
-      std::to_string(ne_));
-  }
+  int ns = Globals::next_scalar_index;
+  // den, tem
+  Globals::next_scalar_index += 2*names.size();
 
   // clouds
   for (int i = 0; i < names.size(); ++i) {
@@ -74,8 +66,10 @@ CloudPhase::CloudPhase(MeshBlock *pmb, ParameterInput *pin):
     }
   }
 
-  c.InitWithShallowSlice(pscalars_->s, 4, ns_, ne_ - ns_ + 1);
-  q.InitWithShallowSlice(pscalars_->r, 4, ns_, ne_ - ns_ + 1);
+  q.InitWithShallowSlice(pscalars_->r, 4, ns, names.size());
+  c.InitWithShallowSlice(pscalars_->s, 4, ns, names.size());
+  tem.InitWithShallowSlice(pscalars_->r, 4, ns + names.size(), names.size());
+  energy.InitWithShallowSlice(pscalars_->s, 4, ns + names.size(), names.size());
 
   pdebug->Leave();
 }

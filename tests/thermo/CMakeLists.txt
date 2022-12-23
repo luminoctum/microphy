@@ -21,7 +21,7 @@ foreach(_test ${_tests})
       ${ATHENAPP_INCLUDE_DIR}
       ${DEBUGGER_INCLUDE_DIR}
       ${MOLECULE_INCLUDE_DIR}
-      ${CONDENSE_INCLUDE_DIR}
+      ${MICROPHY_INCLUDE_DIR}
       ${CMAKE_BINARY_DIR}
       )
 
@@ -29,7 +29,7 @@ foreach(_test ${_tests})
       ${ATHENAPP_LIBRARY_${build}}
       ${DEBUGGER_LIBRARY_${build}}
       ${MOLECULE_LIBRARY_${build}}
-      ${CONDENSE_LIBRARY_${build}}
+      ${MICROPHY_LIBRARY_${build}}
       )
   endforeach()
 endforeach()

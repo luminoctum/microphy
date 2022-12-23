@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.18)
 message(STATUS "Set up canoe project ...")
 
 project(
-  GasPhase
+  microphy
   VERSION 0.0.1
   LANGUAGES CXX
   )
@@ -36,9 +36,9 @@ message(STATUS "Set up project system libraries ...")
 
 if (${UseMPI})
   find_package(MPI REQUIRED)
-  set(EnableMPI MPI_PARALLEL)
+  set(MPIOption MPI_PARALLEL)
 else()
-  set(EnableMPI NOT_MPI_PARALLEL)
+  set(MPIOption NOT_MPI_PARALLEL)
 endif()
 
 ## 5. set up project external libraries ##

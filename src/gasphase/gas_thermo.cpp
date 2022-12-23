@@ -2,7 +2,7 @@
 #include <iostream>
 
 // canoe
-#include "gasthermo.hpp"
+#include "gas_thermo.hpp"
 
 std::ostream& operator<<(std::ostream& os, GasThermo const& my)
 {

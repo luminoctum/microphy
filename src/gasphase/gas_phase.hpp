@@ -1,4 +1,4 @@
-/** @file gasphase.hpp
+/** @file gas_phase.hpp
  * @brief
  *
  * @author Cheng Li (chengcli@umich.edu)
@@ -20,7 +20,7 @@
 
 #include <molecule/gas_mixture.hpp>
 #include <configure.hpp>
-#include "gasthermo.hpp"
+#include "gas_thermo.hpp"
 
 class Molecule;
 class MeshBlock;
@@ -45,7 +45,7 @@ public:
     return dry_;
   }
 
-  Molecule const& getMoist(int i) const {
+  Molecule const& getVapor(int i) const {
     return moist_[i];
   }
 

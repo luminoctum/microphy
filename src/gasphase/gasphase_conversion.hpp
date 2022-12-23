@@ -2,7 +2,7 @@
 #define GASPHASE_CONVERSION_HPP
 
 #include <configure.hpp>
-#include "gasphase.hpp"
+#include "gas_phase.hpp"
 #include "../constants.hpp"
 
 //! Change mass mixing ratio to molar mixing ratio

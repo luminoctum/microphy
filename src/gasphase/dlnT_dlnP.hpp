@@ -2,7 +2,7 @@
 #define DLNT_DLNP_HPP
 
 #include <configure.hpp>
-#include "gasthermo.hpp"
+#include "gas_thermo.hpp"
 
 /*! Moist adiabatic lapse rate
  *

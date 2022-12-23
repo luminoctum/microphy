@@ -37,7 +37,8 @@ void CloudPhase::EquilibrateSP(Real qmol[], Real entropy, Real pres) const
   solver.pcld = this;
 
   Real Tc;
-  int error = root(Tmin, Tmax, ftol_, &Tc, solve_entropy_, &solver);
+  Real ftol = 1.E-4;
+  int error = root(Tmin, Tmax, ftol, &Tc, solve_entropy_, &solver);
 
   if (error) {
     std::stringstream msg;

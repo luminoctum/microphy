@@ -1,5 +1,5 @@
 #include <iostream>
-#include <gasphase/gasphase.hpp>
+#include <gasphase/gas_phase.hpp>
 #include <debugger.hpp>
 
 int main() {
@@ -30,7 +30,7 @@ int main() {
   std::cout << *pthermo << std::endl;
 
   for (int i = 1; i <= NumVapors; ++i)
-    std::cout << pthermo->getMoist(i) << std::endl;
+    std::cout << pthermo->getVapor(i) << std::endl;
 
   delete pinput;
   delete pmesh;

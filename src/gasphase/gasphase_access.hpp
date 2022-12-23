@@ -1,7 +1,7 @@
 #ifndef GASPHASE_ACCESS_HPP
 #define GASPHASE_ACCESS_HPP
 
-#include "gasphase.hpp"
+#include "gas_phase.hpp"
 #include "../constants.hpp"
 
 template<typename T>

@@ -6,7 +6,7 @@
 #define OFF 0
 
 // MPI parallel flag
-#define @EnableMPI@
+#define @MPIOption@
 
 // precision
 #define SINGLE_PRECISION @SinglePrecision@

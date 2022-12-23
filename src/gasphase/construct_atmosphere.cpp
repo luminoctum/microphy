@@ -12,7 +12,7 @@
 
 #include <debugger.hpp>
 #include <configure.hpp>
-#include "gasphase.hpp"
+#include "gas_phase.hpp"
 #include "construct_atmosphere.hpp"
 #include "condense_vapor.hpp"
 #include "../constants.hpp"

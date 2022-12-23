@@ -12,7 +12,7 @@
 
 #include <debugger.hpp>
 #include <molecule/molecules.hpp>
-#include "gasphase.hpp"
+#include "gas_phase.hpp"
 #include "../vectorize.hpp"
 
 std::ostream& operator<<(std::ostream& os, GasPhase const& my)
