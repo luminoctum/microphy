@@ -1,5 +1,5 @@
 #include <iostream>
-#include <gasphase/gas_phase.hpp>
+#include <vapor.hpp>
 #include <debugger.hpp>
 
 int main() {
@@ -10,7 +10,7 @@ int main() {
   pdebug = std::make_unique<Debugger>(1);
 
   IOWrapper infile;
-  infile.Open("test_gasphase.inp", IOWrapper::FileMode::read);
+  infile.Open("test_vapor.inp", IOWrapper::FileMode::read);
 
   ParameterInput *pinput = new ParameterInput();
   pinput->LoadFromFile(infile);
@@ -25,14 +25,14 @@ int main() {
   // initialize mesh
   pmesh->Initialize(restart, pinput);
 
-  GasPhase *pthermo = new GasPhase(pmesh->my_blocks(0), pinput);
+  Vapor *pvapor = new Vapor(pmesh->my_blocks(0), pinput);
 
-  std::cout << *pthermo << std::endl;
+  std::cout << *pvapor << std::endl;
 
   for (int i = 1; i <= NumVapors; ++i)
-    std::cout << pthermo->getVapor(i) << std::endl;
+    std::cout << pvapor->getMolecule(i) << std::endl;
 
   delete pinput;
   delete pmesh;
-  delete pthermo;
+  delete pvapor;
 }

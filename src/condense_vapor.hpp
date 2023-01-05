@@ -9,6 +9,7 @@
 //! solving for
 //! \frac{x_v - r}{1 - r} = s
 //! r = x_v - \frac{s}{1-s}(1 - x_v)
+// xmol: temperature, molar mixing ratio
 inline Real condense_vapor(Real const xmol[], int iv, Molecule const& moist)
 {
   Real xv = xmol[iv];

@@ -2,9 +2,9 @@
 #include <iostream>
 
 // canoe
-#include "gas_thermo.hpp"
+#include "dimensionless_thermo.hpp"
 
-std::ostream& operator<<(std::ostream& os, GasThermo const& my)
+std::ostream& operator<<(std::ostream& os, DimensionlessThermo const& my)
 {
   std::cout << "mu_ratio = " << my.mu_ratio << ", ";
   std::cout << "cp_ratio = " << my.cp_ratio << ", ";

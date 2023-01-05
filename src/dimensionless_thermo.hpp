@@ -1,5 +1,5 @@
-#ifndef GAS_THERMO_HPP
-#define GAS_THERMO_HPP
+#ifndef DIMENSIONLESS_THERMO_HPP
+#define DIMENSIONLESS_THERMO_HPP
 
 // C/C++
 #include <iosfwd>
@@ -7,9 +7,9 @@
 // canoe
 #include <configure.hpp>
 
-struct GasThermo {
-  friend std::ostream& operator<<(std::ostream& os, GasThermo const& my);
-  GasThermo() :
+struct DimensionlessThermo {
+  friend std::ostream& operator<<(std::ostream& os, DimensionlessThermo const& my);
+  DimensionlessThermo() :
     mu_ratio(1), cp_ratio(1), cv_ratio(1),
     t3(0), p3(0), beta(0)
   {}

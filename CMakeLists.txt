@@ -56,6 +56,13 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   set(HAS_EXTERNAL_LIBRARY TRUE)
 endif()
 
+# compile cliutils
+if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+  add_subdirectory(cliutils)
+  message(STATUS "== Done.")
+  set(HAS_EXTERNAL_LIBRARY TRUE)
+endif()
+
 # compile molecule
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   add_subdirectory(molecule)

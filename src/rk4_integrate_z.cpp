@@ -4,14 +4,14 @@
 
 #include <molecule/molecule.hpp>
 #include "construct_atmosphere.hpp"
-#include "gas_phase.hpp"
+#include "vapor.hpp"
 #include "dlnT_dlnP.hpp"
 #include "condense_vapor.hpp"
 
 int const max_iter_ = 10;
 
 void rk4_integrate_z(Real q[], int isat[], 
-  GasThermo const thermo[], Molecule const moist[],
+  DimensionlessThermo const thermo[], Molecule const moist[],
   Real gamma, Real g_ov_Rd, Real dz, int method, Real adTdz)
 {
   Real step[] = {0.5, 0.5, 1.};
@@ -19,7 +19,7 @@ void rk4_integrate_z(Real q[], int isat[],
   Real pres = q[ipr];
   Real dTdz[4], chi[4];
 
-  GasThermo thermo0[1+NumVapors];
+  DimensionlessThermo thermo0[1+NumVapors];
 
   for (int rk = 0; rk < 4; ++rk) {
     // calculate gamma
@@ -71,7 +71,7 @@ void rk4_integrate_z(Real q[], int isat[],
   } while (std::abs(sum - 1.) > 1.E-10);
 }
 
-void rk4_integrate_z_adaptive(Real q[], int isat[], GasThermo const thermo[], 
+void rk4_integrate_z_adaptive(Real q[], int isat[], DimensionlessThermo const thermo[], 
   Molecule const moist[], Real gamma, Real g_ov_Rd, Real dz,
   Real ftol, int &niter, int method, Real adTdz)
 {

@@ -8,12 +8,12 @@ endif()
 option(SinglePrecision "Enable single precision" OFF)
 
 # equation of state
-set(EquationOfState adiabatic_hydro
+set(EquationOfState adiabatic
   CACHE STRING "Choose the equation of state for primitive-conserved conversion")
 set_property(CACHE EquationOfState
   PROPERTY STRINGS
-  adiabatic_hydro
-  ideal_moist_hydro
+  adiabatic
+  ideal_moist
   )
 
 # coordinate system

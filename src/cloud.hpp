@@ -1,5 +1,5 @@
-#ifndef CLOUD_PHASE_HPP
-#define CLOUD_PHASE_HPP
+#ifndef CLOUD_HPP
+#define CLOUD_HPP
 
 #include <map>
 #include <iosfwd>
@@ -10,20 +10,19 @@
 
 class MeshBlock;
 class ParameterInput;
-class GasPhase;
-class CloudPhase;
+class Cloud;
 class PassiveScalars;
 class Microphysics;
 
 struct EntropySolver {
-  Real                  *qmol;
-  Real                  pres;
-  Real                  entropy;
-  CloudPhase const      *pcld;
+  Real             *qmol;
+  Real             pres;
+  Real             entropy;
+  Cloud const      *pcld;
 };
 
-class CloudPhase {
-  friend std::ostream& operator<<(std::ostream& os, CloudPhase const& my);
+class Cloud {
+  friend std::ostream& operator<<(std::ostream& os, Cloud const& my);
 public:
 // public access variables
 
@@ -42,10 +41,10 @@ public:
   // flux in 3-dimensions
   AthenaArray<Real>     flux[3];
 
-  CloudPhase(MeshBlock *pmb, ParameterInput *pin);
+  Cloud(MeshBlock *pmb, ParameterInput *pin);
 
-  Molecule const& getCloud(int i) const {
-    return clouds_[i];
+  Molecule const& getMolecule(int i) const {
+    return molecules_[i];
   }
 
   void calcSedimentaionFlux();
@@ -61,10 +60,9 @@ public:
 protected:
   PassiveScalars        *pscalars_;
 
-  std::vector<Molecule> clouds_;
+  std::vector<Molecule> molecules_;
 
   static double solve_entropy_(double, void*);
 };
-
 
 #endif

@@ -11,9 +11,8 @@
 #   MICROPHY_FOUND
 
 file(GLOB _src_files 
-  gasphase/*.cpp
-  cldphase/*.cpp
-  reaction/*.cpp
+  *.cpp
+  #reaction/*.cpp
   )
 
 foreach(build ${BUILD_TYPES})
@@ -30,6 +29,7 @@ foreach(build ${BUILD_TYPES})
     ${ATHENAPP_INCLUDE_DIR}
     ${CLIMATH_INCLUDE_DIR}
     ${DEBUGGER_INCLUDE_DIR}
+    ${CLIUTILS_INCLUDE_DIR}
     ${MOLECULE_INCLUDE_DIR}
     ${MPI_CXX_INCLUDE_PATH}
     ${CMAKE_BINARY_DIR}
@@ -39,6 +39,7 @@ foreach(build ${BUILD_TYPES})
     ${ATHENAPP_LIBRARY_${build}}
     ${CLIMATH_LIBRARY_${build}}
     ${DEBUGGER_LIBRARY_${build}}
+    ${CLIUTILS_LIBRARY_${build}}
     ${MOLECULE_LIBRARY_${build}}
     ${MPI_CXX_LIBRARIES}
     )

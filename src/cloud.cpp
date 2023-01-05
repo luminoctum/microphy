@@ -4,21 +4,21 @@
 #include <scalars/scalars.hpp>
 #include <debugger.hpp>
 #include <molecule/molecules.hpp>
-#include "cloud_phase.hpp"
-#include "../vectorize.hpp"
+#include <cliutils/vectorize.hpp>
+#include "cloud.hpp"
 
 namespace Globals {
   extern int next_scalar_index;
 }
 
-std::ostream& operator<<(std::ostream& os, CloudPhase const& my)
+std::ostream& operator<<(std::ostream& os, Cloud const& my)
 {
-  for (int i = 0; i < my.clouds_.size(); ++i)
-    std::cout << "#" << i << " " << my.clouds_[i] << std::endl;
+  for (int i = 0; i < my.molecules_.size(); ++i)
+    std::cout << "#" << i << " " << my.molecules_[i] << std::endl;
   return os;
 }
 
-CloudPhase::CloudPhase(MeshBlock *pmb, ParameterInput *pin)
+Cloud::Cloud(MeshBlock *pmb, ParameterInput *pin)
 {
   if (!pin->DoesParameterExist("hydro", "clouds")) {
     pdebug->Leave();
@@ -44,25 +44,25 @@ CloudPhase::CloudPhase(MeshBlock *pmb, ParameterInput *pin)
 
     std::string name = buf;
     if (name == "H2O(l)") {
-      clouds_[i] = Water<1>();
+      molecules_[i] = Water<1>();
     } else if (name == "H2O(s)") {
-      clouds_[i] = Water<2>();
+      molecules_[i] = Water<2>();
     } else if (name == "NH3(l)") {
-      clouds_[i] = Ammonia<1>();
+      molecules_[i] = Ammonia<1>();
     } else if (name == "NH3(s)") {
-      clouds_[i] = Ammonia<2>();
+      molecules_[i] = Ammonia<2>();
     } else if (name == "H2S(l)") {
-      clouds_[i] = HydrogenSulfide<1>();
+      molecules_[i] = HydrogenSulfide<1>();
     } else if (name == "H2S(s)") {
-      clouds_[i] = HydrogenSulfide<2>();
+      molecules_[i] = HydrogenSulfide<2>();
     } else if (name == "NH4SH(s)") {
-      clouds_[i] = AmmoniumHydrosulfide<2>();
+      molecules_[i] = AmmoniumHydrosulfide<2>();
     } else {
       Debugger::Fatal("GasPhase", name, "unrecognized");
     }
 
     if (p != NULL) {
-      clouds_[i].id = p+1;
+      molecules_[i].id = p+1;
     }
   }
 

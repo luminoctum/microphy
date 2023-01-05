@@ -1,13 +1,13 @@
-#ifndef GASPHASE_CONVERSION_HPP
-#define GASPHASE_CONVERSION_HPP
+#ifndef VAPOR_CONVERSION_HPP
+#define VAPOR_CONVERSION_HPP
 
 #include <configure.hpp>
-#include "gas_phase.hpp"
-#include "../constants.hpp"
+#include "vapor.hpp"
+#include "constants.hpp"
 
 //! Change mass mixing ratio to molar mixing ratio
 template<typename T1, typename T2>
-inline void GasPhase::PrimitiveToChemical(T1 qmol, T2 const w) const
+inline void Vapor::PrimitiveToChemical(T1 qmol, T2 const w) const
 {
   // set molar mixing ratio
   Real sum = 1.;
@@ -30,7 +30,7 @@ inline void GasPhase::PrimitiveToChemical(T1 qmol, T2 const w) const
 
 //! Change molar mixing ratio to mass mixing ratio
 template<typename T1, typename T2>
-inline void GasPhase::ChemicalToPrimitive(T1 w, T2 const qmol) const {
+inline void Vapor::ChemicalToPrimitive(T1 w, T2 const qmol) const {
   // set mass mixing ratio
   Real sum = 1.;
   for (int n = 1; n <= NumVapors; ++n) {
@@ -51,7 +51,7 @@ inline void GasPhase::ChemicalToPrimitive(T1 w, T2 const qmol) const {
 
 //! Change density to molar mixing ratio
 template<typename T1, typename T2>
-inline void GasPhase::ConservedToChemical(T1 qmol, T2 const u) const {
+inline void Vapor::ConservedToChemical(T1 qmol, T2 const u) const {
   Real rho = 0., feps = 0., fsig = 0.;
   for (int n = 0; n <= NumVapors; ++n) {
     rho += u[n];
@@ -75,7 +75,7 @@ inline void GasPhase::ConservedToChemical(T1 qmol, T2 const u) const {
 
 //! Change molar mixing ratio to density
 template<typename T1, typename T2>
-inline void GasPhase::ChemicalToConserved(T1 u, T2 const qmol) const {
+inline void Vapor::ChemicalToConserved(T1 u, T2 const qmol) const {
   Real sum = 1., mols = qmol[ipr]/(Constants::Rgas*qmol[idn]);
   for (int n = 1; n <= NumVapors; ++n)
     sum += qmol[n]/mols*(thermo_[n].mu_ratio - 1.);

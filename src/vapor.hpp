@@ -1,4 +1,4 @@
-/** @file gas_phase.hpp
+/** @file vapor.hpp
  * @brief
  *
  * @author Cheng Li (chengcli@umich.edu)
@@ -6,8 +6,8 @@
  * @bug No known bugs.
  */
 
-#ifndef GAS_PHASE_HPP
-#define GAS_PHASE_HPP
+#ifndef VAPOR_HPP
+#define VAPOR_HPP
 
 // Athena++
 #include <eos/eos.hpp>
@@ -20,7 +20,7 @@
 
 #include <molecule/gas_mixture.hpp>
 #include <configure.hpp>
-#include "gas_thermo.hpp"
+#include "dimensionless_thermo.hpp"
 
 class Molecule;
 class MeshBlock;
@@ -34,18 +34,18 @@ class ParameterInput;
 
 enum class Adiabat {reversible = 0, pseudo = 1, dry = 2};
 
-class GasPhase {
-  friend std::ostream& operator<<(std::ostream& os, GasPhase const& my);
+class Vapor {
+  friend std::ostream& operator<<(std::ostream& os, Vapor const& my);
 public:
   // member functions
-  GasPhase(MeshBlock *pmb, ParameterInput *pin);
-  ~GasPhase() {}
+  Vapor(MeshBlock *pmb, ParameterInput *pin);
+  ~Vapor() {}
 
   GasMixture const& getDry() const {
     return dry_;
   }
 
-  Molecule const& getVapor(int i) const {
+  Molecule const& getMolecule(int i) const {
     return moist_[i];
   }
 
@@ -195,26 +195,26 @@ public:
     Real grav, Real dzORdlnp, int len, Adiabat method, Real userp) const;
 
 protected:
-  EquationOfState const       *peos_;
+  EquationOfState const   *peos_;
 
-  GasMixture                  dry_;
-  Molecule                    moist_[1+NumVapors];
+  GasMixture              dry_;
+  Molecule                moist_[1+NumVapors];
 
   //! ideal gas constant of dry air in J/kg
-  Real                        Rd_;
+  Real                    Rd_;
 
   //! reference temperature
-  Real                        Tref_;
+  Real                    Tref_;
 
-  //! thermodynamic data
-  GasThermo                   thermo_[1+NumVapors];
+  //! dimensionless thermodynamic data
+  DimensionlessThermo     thermo_[1+NumVapors];
 
   Real ftol_;
 };
 
 void update_gamma(Real& gamma, Real const qmol[]);
 
-#include "gasphase_conversion.hpp"
-#include "gasphase_access.hpp"
+#include "vapor_conversion.hpp"
+#include "vapor_hydro.hpp"
 
 #endif

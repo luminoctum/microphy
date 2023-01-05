@@ -2,7 +2,7 @@
 #define DLNT_DLNP_HPP
 
 #include <configure.hpp>
-#include "gas_thermo.hpp"
+#include "dimensionless_thermo.hpp"
 
 /*! Moist adiabatic lapse rate
  *
@@ -11,7 +11,7 @@
  * @param isat indicator array of saturated or not
  * @param rcp molar cp ratios with respect to dry air
  */
-Real dlnTdlnP(Real const q[], int const isat[], GasThermo const thermo[], Real gamma)
+Real dlnTdlnP(Real const q[], int const isat[], DimensionlessThermo const thermo[], Real gamma)
 {
   Real f_sig = 1.;
   // mass cp ratio to molar cp ratio

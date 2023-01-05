@@ -10,3 +10,6 @@
 [submodule "climath"]
 	path = climath
 	url = https://github.com/chengcli/climath
+[submodule "cliutils"]
+	path = cliutils
+	url = https://github.com/chengcli/cliutils

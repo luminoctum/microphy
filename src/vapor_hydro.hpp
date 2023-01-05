@@ -1,11 +1,11 @@
-#ifndef GASPHASE_ACCESS_HPP
-#define GASPHASE_ACCESS_HPP
+#ifndef VAPOR_ACCESS_HPP
+#define VAPOR_ACCESS_HPP
 
-#include "gas_phase.hpp"
-#include "../constants.hpp"
+#include "vapor.hpp"
+#include "constants.hpp"
 
 template<typename T>
-inline Real GasPhase::getGamma(T w) const {
+inline Real Vapor::getGamma(T w) const {
   Real gamma = peos_->getGamma();
   Real fsig = 1., feps = 1.;
   for (int n = 1; n <= NumVapors; ++n) {
@@ -16,7 +16,7 @@ inline Real GasPhase::getGamma(T w) const {
 }
 
 template<typename T>
-inline Real GasPhase::RovRd(T w) const {
+inline Real Vapor::RovRd(T w) const {
   Real feps = 1.;
   for (int n = 1; n <= NumVapors; ++n)
     feps += w[n]*(1./thermo_[n].mu_ratio - 1.);
@@ -25,12 +25,12 @@ inline Real GasPhase::RovRd(T w) const {
 
 //! Temperature
 template<typename T>
-inline Real GasPhase::getTemp(T w) const {
+inline Real Vapor::getTemp(T w) const {
   return w[ipr]/(w[idn]*Rd_*RovRd(w));
 }
 
 template<typename T>
-inline Real GasPhase::getPres(T u) const {
+inline Real Vapor::getPres(T u) const {
   Real gm1 = peos_->getGamma() - 1;
   Real rho = 0., fsig = 0., feps = 0.;
   for (int n = 0; n <= NumVapors; ++n) {
@@ -43,7 +43,7 @@ inline Real GasPhase::getPres(T u) const {
 }
 
 template<typename T>
-inline Real GasPhase::getChi(T w) const {
+inline Real Vapor::getChi(T w) const {
   Real gamma = peos_->getGamma();
   Real tem[1] = {getTemp(w)};
   update_gamma(gamma, tem);
@@ -58,7 +58,7 @@ inline Real GasPhase::getChi(T w) const {
 //! c_p = c_{pd}*(1 + \sum_i (q_i*(\hat{c}_{pi} - 1.)))
 //!   = \gamma_d/(\gamma_d - 1.)*R_d*T*(1 + \sum_i (q_i*(\hat{c}_{pi} - 1.)))
 template<typename T>
-inline Real GasPhase::getSpecificCp(T w) const {
+inline Real Vapor::getSpecificCp(T w) const {
   Real gamma = peos_->getGamma();
   Real tem[1] = {getTemp(w)};
   update_gamma(gamma, tem);
@@ -71,7 +71,7 @@ inline Real GasPhase::getSpecificCp(T w) const {
 //! c_v = c_{vd}*(1 + \sum_i (q_i*(\hat{c}_{vi} - 1.)))
 //!   = \gamma_d/(\gamma_d - 1.)*R_d*T*(1 + \sum_i (q_i*(\hat{c}_{vi} - 1.)))
 template<typename T>
-inline Real GasPhase::getSpecificCv(T w) const {
+inline Real Vapor::getSpecificCv(T w) const {
   Real gamma = peos_->getGamma();
   Real tem[1] = {getTemp(w)};
   update_gamma(gamma, tem);
@@ -84,7 +84,7 @@ inline Real GasPhase::getSpecificCv(T w) const {
 //! h = c_{pd}*T*(1 + \sum_i (q_i*(\hat{c}_{pi} - 1.)))
 //!   = \gamma_d/(\gamma_d - 1.)*R_d*T*(1 + \sum_i (q_i*(\hat{c}_{pi} - 1.)))
 template<typename T>
-inline Real GasPhase::getSpecificEnthalpy(T w) const {
+inline Real Vapor::getSpecificEnthalpy(T w) const {
   Real gamma = peos_->getGamma();
   Real tem[1] = {getTemp(w)};
   update_gamma(gamma, tem);
@@ -95,7 +95,7 @@ inline Real GasPhase::getSpecificEnthalpy(T w) const {
 }
 
 template<typename T>
-inline Real GasPhase::getMeanMolecularWeight(T w) const {
+inline Real Vapor::getMeanMolecularWeight(T w) const {
   Real feps = 1.;
   for (int n = 1; n <= NumVapors; ++n)
     feps += w[n]*(thermo_[n].mu_ratio - 1.);

@@ -12,12 +12,12 @@
 
 #include <debugger.hpp>
 #include <configure.hpp>
-#include "gas_phase.hpp"
+#include "vapor.hpp"
 #include "construct_atmosphere.hpp"
 #include "condense_vapor.hpp"
-#include "../constants.hpp"
+#include "constants.hpp"
 
-void GasPhase::ConstructAtmosphere(Real **w, Real Ts, Real Ps,
+void Vapor::ConstructAtmosphere(Real **w, Real Ts, Real Ps,
   Real grav, Real dzORdlnp, int len, Adiabat method, Real userp) const
 {
   pdebug->Call("Constructing atmosphere");

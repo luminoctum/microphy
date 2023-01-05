@@ -12,37 +12,37 @@
 
 #include <debugger.hpp>
 #include <molecule/molecules.hpp>
-#include "gas_phase.hpp"
-#include "../vectorize.hpp"
+#include <cliutils/vectorize.hpp>
+#include "vapor.hpp"
 
-std::ostream& operator<<(std::ostream& os, GasPhase const& my)
+std::ostream& operator<<(std::ostream& os, Vapor const& my)
 {
   std::cout << "Dry component = " << std::endl;
   std::cout << my.dry_ << std::endl;
   std::cout << "Rd = " << my.Rd_ << std::endl;
   std::cout << "Tref = " << my.Tref_ << std::endl;
-  std::cout << "GasThermo data = "<< std::endl;
+  std::cout << "DimensionlessThermo data = "<< std::endl;
   for (int i = 0; i <= NumVapors; ++i)
     std::cout << "#" << i << " " << my.thermo_[i] << std::endl;
   return os;
 }
 
-GasPhase::GasPhase(MeshBlock *pmb, ParameterInput *pin):
+Vapor::Vapor(MeshBlock *pmb, ParameterInput *pin):
   peos_(pmb->peos), Tref_(pin->GetOrAddReal("hydro", "Tref", 300.))
 {
-  pdebug->Enter("GasPhase");
+  pdebug->Enter("Vapor");
   std::string str = pin->GetOrAddString("hydro", "vapors", "Dummy:1.");
   std::vector<std::string> names = Vectorize<std::string>(str.c_str(), ", ");
 
   if (names.size() <= NumVapors) {
-    Debugger::Fatal("GasPhase", "not enough vapors");
+    Debugger::Fatal("Vapor", "not enough vapors");
   }
 
   // dry component
   dry_ = GasMixture(names[0]);
   moist_[0] = dry_;
 
-  // temporary clouds
+  // temporary clouds for calculating dimensionless thermodynamics
   Molecule clouds[1+NumVapors];
 
   // vapors
@@ -60,7 +60,7 @@ GasPhase::GasPhase(MeshBlock *pmb, ParameterInput *pin):
       moist_[i] = HydrogenSulfide<0>();
       clouds[i] = HydrogenSulfide<ReferenceCloudPhase>();
     } else {
-      Debugger::Fatal("GasPhase", names[i], "unrecognized");
+      Debugger::Fatal("Vapor:", names[i], "unrecognized");
     }
   }
 
@@ -74,7 +74,7 @@ GasPhase::GasPhase(MeshBlock *pmb, ParameterInput *pin):
       + (1. - gamma)/thermo_[i].mu_ratio;
     thermo_[i].t3 = moist_[i].tripleT; 
     thermo_[i].p3 = moist_[i].tripleP; 
-    thermo_[i].beta = -clouds[i].getEnthalpyOffset()/(Constants::Rgas*moist_[i].tripleT);
+    thermo_[i].beta = clouds[i].latentH/(Constants::Rgas*moist_[i].tripleT);
     // delta = $(\sigma_j - \sigma_i)*\epsilon_i*\gamma/(\gamma - 1)$
     Real cloud_cp_ratio = clouds[i].cp(Tref_)/dry_.cp(Tref_)/thermo_[i].mu_ratio;
     thermo_[i].delta = (cloud_cp_ratio - thermo_[i].cp_ratio)*
