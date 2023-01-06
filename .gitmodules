@@ -13,3 +13,6 @@
 [submodule "cliutils"]
 	path = cliutils
 	url = https://github.com/chengcli/cliutils
+[submodule "cantera"]
+	path = cantera
+	url = https://github.com/Cantera/cantera

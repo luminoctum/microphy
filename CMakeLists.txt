@@ -30,6 +30,8 @@ set(SOURCE_RELDIR "source")
 
 ## 4. set up project system libraries ##
 message(STATUS "4. Set up project system libraries ...")
+find_package(Cantera REQUIRED)
+find_package(Eigen3 3.3 REQUIRED)
 
 ## 5. set up project external libraries ##
 message(STATUS "5. Set up project external libraries ...")
