@@ -1,34 +1,99 @@
+description: |-
+  Kessler microphysics scheme for H2O
+
 phases:
-- name: Kessler
+- name: vapor
   thermo: ideal-gas
   elements: [O, H]
-  species: [H2O, H2O(l), H2O(s), H2O(l)-rain, H2O(s)-snow]
+  species: [(dry), H2O]
+
+- name: cloud
+  thermo: ideal-condensed
+  elements: [O, H]
+  species: [H2O(l), H2O(s)]
   kinetics: gas
+  reactions: [freezing]
+
+- name: precipitation
+  thermo: ideal-condensed
+  elements: [O, H]
+  species: [H2O(l)-rain, H2O(s)-snow]
+
+- name: vapor_cloud
+  thermo: ideal-surface
+  adjacent-phases: [vapor, cloud]
+  reactions: [condensation]
+
+- name: cloud_precipitation
+  thermo: ideal-condensed
+  adjacent-phases: [cloud, precipitation]
+  reactions: [autoconversion]
+
+- name: precipitation_vapor
+  thermo: ideal-surface
+  adjacent-phases: [cloud, vapor]
+  reactions: [evaporation]
 
 species:
+- name: (dry)
+  composition: {H: 2}
+  thermo:
+    model: constant-cp
+
 - name: H2O
   composition: {H: 2, O: 1}
+
 - name: H2O(l)
   composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
+
 - name: H2O(l)-rain
   composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
+
 - name: H2O(s)
   composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
+
 - name: H2O(s)-snow
   composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
 
-reactions:
+condensation:
 - equation: H2O <=> H2O(l) # Reaction 1
-  type: condensation
-- equation: H2O(l) <=> H2O(l)-rain  # Reaction 2
-- equation: H2O(l)-rain <=> H2O # Reaction 3
-  type: evaporation
+  rate-constant: {A: 1, b: 0, Ea: 0}
+- equation: H2O <=> H2O(s)  # Reaction 2
+  rate-constant: {A: 1, b: 0, Ea: 0}
 
-- equation: H2O <=> H2O(s)  # Reaction 4
-  type: condensation
-- equation: H2O(s) <=> H2O(s)-snow  # Reaction 5
+autoconversion:
+- equation: H2O(l) <=> H2O(l)-rain  # Reaction 3
+  rate-constant: {A: 1, b: 0, Ea: 0}
+- equation: H2O(s) <=> H2O(s)-snow  # Reaction 4
+  rate-constant: {A: 1, b: 0, Ea: 0}
+
+evaporation:
+- equation: H2O(l)-rain <=> H2O # Reaction 5
+  rate-constant: {A: 1, b: 0, Ea: 0}
 - equation: H2O(s)-snow <=> H2O # Reaction 6
-  type: evaporation
+  rate-constant: {A: 1, b: 0, Ea: 0}
 
-- equation: H2O(l) <=> H2O(s)  # Reaction 7
-  rate-constant: {A: 8.318e+21, b: -2, Ea: 0}
+freezing:
+- equation: H2O(l) => H2O(s)  # Reaction 7
+  type: freezing
+  rate-constant: {A: 1, b: 0, Ea: 0}

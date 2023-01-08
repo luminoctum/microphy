@@ -17,7 +17,7 @@ file(GLOB _src_files
 
 foreach(build ${BUILD_TYPES})
   string(TOLOWER ${build} buildl)
-  add_library(microphy_${buildl} ${_src_files})
+  add_library(microphy_${buildl} OBJECT ${_src_files})
 
   set_target_properties(microphy_${buildl}
     PROPERTIES
@@ -31,8 +31,14 @@ foreach(build ${BUILD_TYPES})
     ${DEBUGGER_INCLUDE_DIR}
     ${CLIUTILS_INCLUDE_DIR}
     ${MOLECULE_INCLUDE_DIR}
+    ${CANTERA_INCLUDE_DIR}
     ${MPI_CXX_INCLUDE_PATH}
     ${CMAKE_BINARY_DIR}
+    )
+
+  target_link_directories(microphy_${buildl}
+    PRIVATE
+    ${CANTERA_LIBRARY_DIR}
     )
 
   target_link_libraries(microphy_${buildl}
@@ -41,6 +47,7 @@ foreach(build ${BUILD_TYPES})
     ${DEBUGGER_LIBRARY_${build}}
     ${CLIUTILS_LIBRARY_${build}}
     ${MOLECULE_LIBRARY_${build}}
+    ${CANTERA_LIBRARY}
     ${MPI_CXX_LIBRARIES}
     )
 

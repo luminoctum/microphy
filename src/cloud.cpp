@@ -5,11 +5,10 @@
 #include <debugger.hpp>
 #include <molecule/molecules.hpp>
 #include <cliutils/vectorize.hpp>
+#include <configure.hpp>
 #include "cloud.hpp"
 
-namespace Globals {
-  extern int next_scalar_index;
-}
+int Globals::next_scalar_index = 0;
 
 std::ostream& operator<<(std::ostream& os, Cloud const& my)
 {

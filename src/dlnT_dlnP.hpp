@@ -11,7 +11,7 @@
  * @param isat indicator array of saturated or not
  * @param rcp molar cp ratios with respect to dry air
  */
-Real dlnTdlnP(Real const q[], int const isat[], DimensionlessThermo const thermo[], Real gamma)
+inline Real dlnTdlnP(Real const q[], int const isat[], DimensionlessThermo const thermo[], Real gamma)
 {
   Real f_sig = 1.;
   // mass cp ratio to molar cp ratio
