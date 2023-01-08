@@ -96,4 +96,4 @@ evaporation:
 freezing:
 - equation: H2O(l) => H2O(s)  # Reaction 7
   type: freezing
-  rate-constant: {A: 1, b: 0, Ea: 0}
+  rate-constant: {rate: 1, temperature: 273.16}
