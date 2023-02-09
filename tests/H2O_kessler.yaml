@@ -10,29 +10,15 @@ phases:
 - name: cloud
   thermo: ideal-condensed
   elements: [O, H]
-  species: [H2O(l), H2O(s)]
+  species: [H2O(l), H2O(s), H2O(l)-rain, H2O(s)-snow]
   kinetics: gas
-  reactions: [freezing]
+  reactions: [freezing, autoconversion]
 
-- name: precipitation
-  thermo: ideal-condensed
-  elements: [O, H]
-  species: [H2O(l)-rain, H2O(s)-snow]
-
-- name: vapor_cloud
+- name: vapor:cloud
   thermo: ideal-surface
   adjacent-phases: [vapor, cloud]
-  reactions: [condensation]
-
-- name: cloud_precipitation
-  thermo: ideal-condensed
-  adjacent-phases: [cloud, precipitation]
-  reactions: [autoconversion]
-
-- name: precipitation_vapor
-  thermo: ideal-surface
-  adjacent-phases: [cloud, vapor]
-  reactions: [evaporation]
+  kinetics: surface
+  reactions: [condensation, evaporation]
 
 species:
 - name: (dry)
@@ -95,5 +81,8 @@ evaporation:
 
 freezing:
 - equation: H2O(l) <=> H2O(s)  # Reaction 7
+  type: freezing
+  rate-constant: {A: 1, T: 273.16}
+- equation: H2O(l)-rain <=> H2O(s)-snow  # Reaction 8
   type: freezing
   rate-constant: {A: 1, T: 273.16}
