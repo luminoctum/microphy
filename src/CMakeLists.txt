@@ -26,6 +26,7 @@ foreach(build ${BUILD_TYPES})
 
   target_include_directories(microphy_${buildl}
     SYSTEM PRIVATE
+    ${EIGEN3_INCLUDE_DIR}
     ${ATHENAPP_INCLUDE_DIR}
     ${CLIMATH_INCLUDE_DIR}
     ${DEBUGGER_INCLUDE_DIR}

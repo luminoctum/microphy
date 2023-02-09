@@ -82,18 +82,18 @@ condensation:
   rate-constant: {A: 1, b: 0, Ea: 0}
 
 autoconversion:
-- equation: H2O(l) <=> H2O(l)-rain  # Reaction 3
+- equation: H2O(l) => H2O(l)-rain  # Reaction 3
   rate-constant: {A: 1, b: 0, Ea: 0}
-- equation: H2O(s) <=> H2O(s)-snow  # Reaction 4
+- equation: H2O(s) => H2O(s)-snow  # Reaction 4
   rate-constant: {A: 1, b: 0, Ea: 0}
 
 evaporation:
-- equation: H2O(l)-rain <=> H2O # Reaction 5
+- equation: H2O(l)-rain => H2O # Reaction 5
   rate-constant: {A: 1, b: 0, Ea: 0}
-- equation: H2O(s)-snow <=> H2O # Reaction 6
+- equation: H2O(s)-snow => H2O # Reaction 6
   rate-constant: {A: 1, b: 0, Ea: 0}
 
 freezing:
-- equation: H2O(l) => H2O(s)  # Reaction 7
+- equation: H2O(l) <=> H2O(s)  # Reaction 7
   type: freezing
-  rate-constant: {rate: 1, temperature: 273.16}
+  rate-constant: {A: 1, T: 273.16}

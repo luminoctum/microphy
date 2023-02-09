@@ -24,8 +24,8 @@ void FreezingRate::setParameters(const AnyMap& node, const UnitStack& rate_units
   }
 
   auto& rateNode = node["rate-constant"];
-  freezing_temperature = rateNode["temperature"].asDouble();
-  freezing_rate = rateNode["rate"].asDouble();
+  freezing_temperature = rateNode["T"].asDouble();
+  freezing_rate = rateNode["A"].asDouble();
 }
 
 void FreezingRate::getParameters(AnyMap& node) const
@@ -36,8 +36,8 @@ void FreezingRate::getParameters(AnyMap& node) const
     return;
   }
   AnyMap rateNode;
-  rateNode["temperature"].setQuantity(freezing_temperature, "K");
-  rateNode["rate"].setQuantity(freezing_rate, "kg^{-1} s^{-1}");
+  rateNode["T"].setQuantity(freezing_temperature, "K");
+  rateNode["A"].setQuantity(freezing_rate, "kg^{-1} s^{-1}");
 
   if (!rateNode.empty()) {
     node["rate-constants"] = std::move(rateNode);
@@ -50,7 +50,13 @@ void FreezingRate::updateFromStruct(const FreezingData& shared_data)
 
 double FreezingRate::evalFromStruct(const FreezingData& shared_data)
 {
-  return freezing_rate;
+  if (shared_data.temperature > freezing_temperature)
+    return -freezing_rate;
+
+  if (shared_data.temperature < freezing_temperature)
+    return freezing_rate;
+
+  return 0.;
 }
 
 double FreezingRate::ddTScaledFromStruct(const FreezingData& shared_data) const
