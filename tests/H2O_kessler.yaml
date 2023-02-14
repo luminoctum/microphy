@@ -1,6 +1,13 @@
 description: |-
   Kessler microphysics scheme for H2O
 
+  Interface phases
+  ================
+
+  vapor/cloud interface
+  Species and site density are dummy entries as we do not consider surface-adsorbed species
+
+
 phases:
 - name: vapor
   thermo: ideal-gas
@@ -17,8 +24,11 @@ phases:
 - name: vapor:cloud
   thermo: ideal-surface
   adjacent-phases: [vapor, cloud]
-  kinetics: surface
+  kinetics: multiphase
+  #kinetics: surface
   reactions: [condensation, evaporation]
+  species: [(dummy)]
+  site-density: 0.01 mol/cm^2
 
 species:
 - name: (dry)
@@ -28,6 +38,8 @@ species:
 
 - name: H2O
   composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
 
 - name: H2O(l)
   composition: {H: 2, O: 1}
@@ -61,22 +73,36 @@ species:
     model: constant-volume
     density: 1.E3 kg/m^3
 
+- name: (dummy)
+  composition: {}
+  thermo:
+    model: constant-cp
+    h0: 0.0 kJ/mol
+    s0: 0.0 J/mol/K
+  note: Dummy species (needed for defining the interfaces)
+
 condensation:
 - equation: H2O <=> H2O(l) # Reaction 1
-  rate-constant: {A: 1, b: 0, Ea: 0}
+  type: condensation
+  rate-constant: {A: 1, beta: 24.88, gamma: 5.06, P3: 611.7, T3: 273.16, ice: false}
 - equation: H2O <=> H2O(s)  # Reaction 2
-  rate-constant: {A: 1, b: 0, Ea: 0}
+  type: condensation
+  rate-constant: {A: 1, beta: 22.98, gamma: 0.52, P3: 611.7, T3: 273.16, ice: true}
 
 autoconversion:
 - equation: H2O(l) => H2O(l)-rain  # Reaction 3
+  type: autoconversion
   rate-constant: {A: 1, b: 0, Ea: 0}
 - equation: H2O(s) => H2O(s)-snow  # Reaction 4
+  type: autoconversion
   rate-constant: {A: 1, b: 0, Ea: 0}
 
 evaporation:
 - equation: H2O(l)-rain => H2O # Reaction 5
+  type: evaporation
   rate-constant: {A: 1, b: 0, Ea: 0}
 - equation: H2O(s)-snow => H2O # Reaction 6
+  type: evaporation
   rate-constant: {A: 1, b: 0, Ea: 0}
 
 freezing:
