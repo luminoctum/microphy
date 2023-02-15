@@ -106,7 +106,6 @@ int main() {
     std::cout << sol->adjacent(i)->name() << " ";
   std::cout << std::endl;
 
-
   std::cout << "Number of kinetics reactions = "
             << sol->kinetics()->nReactions() << std::endl;
   for (int i = 0; i < sol->kinetics()->nReactions(); ++i) {
@@ -148,5 +147,53 @@ int main() {
   std::cout << "Species names = ";
   for (int i = 0; i < sol->kinetics()->nTotalSpecies(); ++i)
     std::cout << sol->kinetics()->kineticsSpeciesName(i) << " ";
+  std::cout << std::endl;
+
+  auto precip = newSolution("H2O_kessler.yaml", "precipitation");
+  auto sol2 = newSolution("H2O_kessler.yaml", "vapor:precipitation", "", {vapor, precip});
+  vapor = sol2->adjacent("vapor");
+  std::cout << "Temperature = " << vapor->thermo()->temperature() << std::endl;
+  std::cout << "Pressure = " << vapor->thermo()->pressure() << std::endl;
+  std::cout << "density = " << vapor->thermo()->density() << std::endl;
+
+  std::cout << "Number of kinetics reactions = "
+            << sol2->kinetics()->nReactions() << std::endl;
+  for (int i = 0; i < sol2->kinetics()->nReactions(); ++i) {
+    std::cout << sol2->kinetics()->reactionString(i) << std::endl;
+  }
+
+  sol2->kinetics()->getFwdRateConstants(kfwd.data());
+  std::cout << "Forward rate constants = " << std::endl;
+  for (int i = 0; i < sol2->kinetics()->nReactions(); ++i) {
+    std::cout << kfwd[i] << std::endl;
+  }
+
+  sol2->kinetics()->getFwdRatesOfProgress(kfwd.data());
+  std::cout << "Forward rate of progress = " << std::endl;
+  for (int i = 0; i < sol2->kinetics()->nReactions(); ++i) {
+    std::cout << kfwd[i] << std::endl;
+  }
+
+  sol2->kinetics()->getRevRatesOfProgress(kfwd.data());
+  std::cout << "Reverse rate of progress = " << std::endl;
+  for (int i = 0; i < sol2->kinetics()->nReactions(); ++i) {
+    std::cout << kfwd[i] << std::endl;
+  }
+
+  sol2->kinetics()->getNetRatesOfProgress(kfwd.data());
+  std::cout << "Net rate of progress = " << std::endl;
+  for (int i = 0; i < sol2->kinetics()->nReactions(); ++i) {
+    std::cout << kfwd[i] << std::endl;
+  }
+
+  std::cout << "Total species = "
+            << sol2->kinetics()->nTotalSpecies() << std::endl;
+  std::cout << "Number of Phases = " << sol2->kinetics()->nPhases() << std::endl;
+  std::cout << sol2->kinetics()->phaseIndex("vapor:precipitation") << std::endl;
+  std::cout << sol2->kinetics()->phaseIndex("vapor") << std::endl;
+  std::cout << sol2->kinetics()->phaseIndex("precipitation") << std::endl;
+  std::cout << "Species names = ";
+  for (int i = 0; i < sol2->kinetics()->nTotalSpecies(); ++i)
+    std::cout << sol2->kinetics()->kineticsSpeciesName(i) << " ";
   std::cout << std::endl;
 }

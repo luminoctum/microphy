@@ -1,11 +1,11 @@
 #include <iostream>
-#include <cantera/kinetics/MultiPhaseKinetics.h>
+#include <cantera/kinetics/EvaporationKinetics.h>
 #include <cantera/thermo/ThermoPhase.h>
 
 namespace Cantera
 {
 
-void MultiPhaseKinetics::updateROP()
+void EvaporationKinetics::updateROP()
 {
   std::cout << "######### I'm updating ROP ##########" << std::endl;
 
@@ -45,21 +45,15 @@ void MultiPhaseKinetics::updateROP()
   for (size_t i = 0; i < nReactions(); i++) {
     // Scale the base forward rate coefficient by the perturbation factor
     m_ropf[i] = m_rfn[i] * m_perturb[i];
-    // Multiply the scaled forward rate coefficient by the reciprocal of the
-    // equilibrium constant
-    m_ropr[i] = m_ropf[i] * m_rkcn[i];
   }
 
   // multiply ropf by the activity concentration reaction orders to obtain
   // the forward rates of progress.
   m_reactantStoich.multiply(m_actConc.data(), m_ropf.data());
 
-  // For reversible reactions, multiply ropr by the activity concentration
-  // products
-  m_revProductStoich.multiply(m_actConc.data(), m_ropr.data());
-
   for (size_t j = 0; j != nReactions(); ++j) {
-    m_ropnet[j] = m_ropf[j] - m_ropr[j];
+    m_ropr[j] = 0.;
+    m_ropnet[j] = m_ropf[j];
   }
 
   m_ROP_ok = true;

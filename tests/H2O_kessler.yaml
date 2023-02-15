@@ -17,16 +17,32 @@ phases:
 - name: cloud
   thermo: ideal-condensed
   elements: [O, H]
-  species: [H2O(l), H2O(s), H2O(l)-rain, H2O(s)-snow]
+  species: [H2O(l), H2O(s)]
   kinetics: gas
-  reactions: [freezing, autoconversion]
+  reactions: [freezing1]
+
+- name: precipitation
+  thermo: ideal-condensed
+  elements: [O, H]
+  species: [H2O(l)-rain, H2O(s)-snow]
+  kinetics: gas
+  reactions: [freezing2]
 
 - name: vapor:cloud
   thermo: ideal-surface
   adjacent-phases: [vapor, cloud]
-  kinetics: multiphase
+  kinetics: nucleation
   #kinetics: surface
-  reactions: [condensation, evaporation]
+  reactions: [condensation]
+  species: [(dummy)]
+  site-density: 0.01 mol/cm^2
+
+- name: vapor:precipitation
+  thermo: ideal-surface
+  adjacent-phases: [vapor, precipitation]
+  kinetics: evaporation
+  #kinetics: surface
+  reactions: [evaporation]
   species: [(dummy)]
   site-density: 0.01 mol/cm^2
 
@@ -89,26 +105,28 @@ condensation:
   type: condensation
   rate-constant: {A: 1, beta: 22.98, gamma: 0.52, P3: 611.7, T3: 273.16, ice: true}
 
-autoconversion:
+coagulation:
 - equation: H2O(l) => H2O(l)-rain  # Reaction 3
-  type: autoconversion
+  type: coagulation 
   rate-constant: {A: 1, b: 0, Ea: 0}
 - equation: H2O(s) => H2O(s)-snow  # Reaction 4
-  type: autoconversion
+  type: coagulation
   rate-constant: {A: 1, b: 0, Ea: 0}
 
 evaporation:
 - equation: H2O(l)-rain => H2O # Reaction 5
   type: evaporation
-  rate-constant: {A: 1, b: 0, Ea: 0}
+  rate-constant: {A: 0.01, beta: 24.88, gamma: 5.06, P3: 611.7, T3: 273.16, ice: false}
 - equation: H2O(s)-snow => H2O # Reaction 6
   type: evaporation
-  rate-constant: {A: 1, b: 0, Ea: 0}
+  rate-constant: {A: 0.01, beta: 22.98, gamma: 0.52, P3: 611.7, T3: 273.16, ice: true}
 
-freezing:
+freezing1:
 - equation: H2O(l) <=> H2O(s)  # Reaction 7
   type: freezing
   rate-constant: {A: 1, T: 273.16}
+
+freezing2:
 - equation: H2O(l)-rain <=> H2O(s)-snow  # Reaction 8
   type: freezing
   rate-constant: {A: 1, T: 273.16}
