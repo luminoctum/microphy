@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vapor.hpp>
 #include <debugger.hpp>
+#include <mesh/mesh.hpp>
+#include <cantera/thermo/IdealGasPhase.h>
+//#include <cantera/base/Solution.h>
 
 int main() {
   // no MPI
@@ -25,12 +28,26 @@ int main() {
   // initialize mesh
   pmesh->Initialize(restart, pinput);
 
-  Vapor *pvapor = new Vapor(pmesh->my_blocks(0), pinput);
+  // load chemistry
+  //std::string kinetics_file = pinput->GetString("chemistry", "jupiter_h2o.yaml");
+  //auto sol = Cantera::newSolution(kinetics_file, "vapor");
 
-  std::cout << *pvapor << std::endl;
+  //Vapor *pvapor = new Vapor(pmesh->my_blocks(0), pinput);
+  auto pvapor = new Vapor<Cantera::IdealGasPhase>(pinput);
 
-  for (int i = 1; i <= NumVapors; ++i)
-    std::cout << pvapor->getMolecule(i) << std::endl;
+  std::cout << "Number of species = ";
+  std::cout << pvapor->nSpecies() << std::endl;
+
+  std::vector<Real> wghts(pvapor->nSpecies());
+  pvapor->getMolecularWeights(wghts.data());
+
+  for (int i = 0; i < pvapor->nSpecies(); ++i) {
+    std::cout << pvapor->speciesName(i) << " ";
+    std::cout << wghts[i] << " ";
+    std::cout << pvapor->moleFraction(i) << std::endl;
+  }
+  std::cout << "Number of dry species = ";
+  std::cout << pvapor->nDryMixtures() << std::endl;
 
   delete pinput;
   delete pmesh;

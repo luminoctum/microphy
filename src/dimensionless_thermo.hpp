@@ -15,29 +15,29 @@ struct DimensionlessThermo {
   {}
 
   //! ratio of mean molecular weights
-  Real                        mu_ratio;
+  Real  mu_ratio;
 
   //! ratio of specific heat capacities at constant pressure
-  Real                        cp_ratio;
+  Real  cp_ratio;
 
   //! ratio of specific heat capacities at constant volume
-  Real                        cv_ratio;
+  Real  cv_ratio;
 
   //! triple point temperature [K]
-  Real                        t3;
+  Real  t3;
 
   //! triple point pressure [pa]
-  Real                        p3;
+  Real  p3;
 
   /*! dimensionless latent heat
    *$\beta_{ij} == \frac{L_{ij}^r + \Delta c_{ij}T^r}{R_i T^r} $
    */
-  Real                        beta;
+  Real  beta;
 
   /*! dimensionless differences in specific heat capacity
    *$(c_{ij} - c_{p,i})/R_i$
    */
-  Real                        delta;
+  Real  delta;
 };
 
 #endif

@@ -7,6 +7,9 @@ description: |-
   vapor/cloud interface
   Species and site density are dummy entries as we do not consider surface-adsorbed species
 
+  vapor/precipitation interface
+  Species and site density are dummy entries as we do not consider surface-adsorbed species
+
 
 phases:
 - name: vapor

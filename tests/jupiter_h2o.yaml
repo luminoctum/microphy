@@ -1,0 +1,145 @@
+description: |-
+  Kessler microphysics scheme for H2O
+
+  Interface phases
+  ================
+
+  vapor/cloud interface
+  Species and site density are dummy entries as we do not consider surface-adsorbed species
+
+  vapor/precipitation interface
+  Species and site density are dummy entries as we do not consider surface-adsorbed species
+
+
+phases:
+- name: vapor
+  thermo: ideal-gas
+  elements: [H, He, O, C]
+  species: [H2, He, CH4, H2O]
+
+- name: cloud
+  thermo: ideal-condensed
+  elements: [O, H]
+  species: [H2O(l), H2O(s)]
+  kinetics: gas
+  reactions: [freezing1]
+
+- name: precipitation
+  thermo: ideal-condensed
+  elements: [O, H]
+  species: [H2O(l)-rain, H2O(s)-snow]
+  kinetics: gas
+  reactions: [freezing2]
+
+- name: vapor:cloud
+  thermo: ideal-surface
+  adjacent-phases: [vapor, cloud]
+  kinetics: nucleation
+  #kinetics: surface
+  reactions: [condensation]
+  species: [(dummy)]
+  site-density: 0.01 mol/cm^2
+
+- name: vapor:precipitation
+  thermo: ideal-surface
+  adjacent-phases: [vapor, precipitation]
+  kinetics: evaporation
+  #kinetics: surface
+  reactions: [evaporation]
+  species: [(dummy)]
+  site-density: 0.01 mol/cm^2
+
+species:
+- name: H2
+  composition: {H: 2}
+  thermo:
+    model: constant-cp
+
+- name: He
+  composition: {He: 1}
+  thermo:
+    model: constant-cp
+
+- name: CH4
+  composition: {C: 1, H: 4}
+  thermo:
+    model: constant-cp
+
+- name: H2O
+  composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+
+- name: H2O(l)
+  composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
+
+- name: H2O(l)-rain
+  composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
+
+- name: H2O(s)
+  composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
+
+- name: H2O(s)-snow
+  composition: {H: 2, O: 1}
+  thermo:
+    model: constant-cp
+  equation-of-state:
+    model: constant-volume
+    density: 1.E3 kg/m^3
+
+- name: (dummy)
+  composition: {}
+  thermo:
+    model: constant-cp
+    h0: 0.0 kJ/mol
+    s0: 0.0 J/mol/K
+  note: Dummy species (needed for defining the interfaces)
+
+condensation:
+- equation: H2O <=> H2O(l) # Reaction 1
+  type: condensation
+  rate-constant: {A: 1, beta: 24.88, gamma: 5.06, P3: 611.7, T3: 273.16, ice: false}
+- equation: H2O <=> H2O(s)  # Reaction 2
+  type: condensation
+  rate-constant: {A: 1, beta: 22.98, gamma: 0.52, P3: 611.7, T3: 273.16, ice: true}
+
+coagulation:
+- equation: H2O(l) => H2O(l)-rain  # Reaction 3
+  type: coagulation 
+  rate-constant: {A: 1, b: 0, Ea: 0}
+- equation: H2O(s) => H2O(s)-snow  # Reaction 4
+  type: coagulation
+  rate-constant: {A: 1, b: 0, Ea: 0}
+
+evaporation:
+- equation: H2O(l)-rain => H2O # Reaction 5
+  type: evaporation
+  rate-constant: {A: 0.01, beta: 24.88, gamma: 5.06, P3: 611.7, T3: 273.16, ice: false}
+- equation: H2O(s)-snow => H2O # Reaction 6
+  type: evaporation
+  rate-constant: {A: 0.01, beta: 22.98, gamma: 0.52, P3: 611.7, T3: 273.16, ice: true}
+
+freezing1:
+- equation: H2O(l) <=> H2O(s)  # Reaction 7
+  type: freezing
+  rate-constant: {A: 1, T: 273.16}
+
+freezing2:
+- equation: H2O(l)-rain <=> H2O(s)-snow  # Reaction 8
+  type: freezing
+  rate-constant: {A: 1, T: 273.16}
