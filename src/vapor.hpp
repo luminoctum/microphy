@@ -1,20 +1,23 @@
 #ifndef VAPOR_HPP
 #define VAPOR_HPP
 
+#include <sstream>
 #include <configure.hpp>
+#include <debugger.hpp>
 #include <cliutils/vectorize.hpp>
 #include <parameter_input.hpp>
 #include <cantera/base/stringUtils.h>
 #include <cantera/thermo.h>
 
-template<typename VaporPhase>
-class Vapor : public VaporPhase
+template<typename BasePhase>
+class Vapor : public BasePhase
 {
 public:
   //Vapor(MeshBlock *pmb, ParamterInput *pin);
   Vapor(ParameterInput *pin):
-    VaporPhase(pin->GetString("chemistry", "kinetics_file"), "vapor")
+    BasePhase(pin->GetString("chemistry", "kinetics_file"), "vapor")
   {
+    std::stringstream msg;
     std::string str = pin->GetString("hydro", "vapors");
     std::vector<std::string> vapor_comps = Vectorize<std::string>(str.c_str(), ",");
     for (size_t i = 0; i < vapor_comps.size(); ++i)
@@ -22,6 +25,12 @@ public:
     m_num_dry_mixtures = Cantera::parseCompString(vapor_comps[0]).size();
     m_molwt_ratios[0] = 1.;
     m_cv_mass_ratios[0] = 1.;
+
+    if (vapor_comps.size() - 1 > NumVapors) {
+      msg << vapor_comps.size() - 1 << " vapors needed, but "
+          << NumVapors << " configured. Increase the number of vapors";
+      Debugger::Fatal("Vapor", msg.str());
+    }
   }
 
   ~Vapor() {}
@@ -72,7 +81,7 @@ public:
   void updateThermodynamics(Real temperature, Real pressure) {
     this->setTemperature(temperature);
     this->setPressure(pressure);
-    VaporPhase::updateThermo();
+    BasePhase::updateThermo();
 
     Real cp_dry = 0., ym = 0.;
     Real m_mmw_dry = 0.;
@@ -87,8 +96,8 @@ public:
     m_mmw_dry /= ym;
 
     for (int i = 1; i <= NumVapors; ++i)
-      m_cv_mass_ratios[i] = (this->m_cp0_R[i] - 1.)*m_mmw_dry/(cp_dry - 1.)
-        /this->molecularWeight(i);
+      m_cv_mass_ratios[i] = (this->m_cp0_R[nDryMixtures() + i] - 1.)*m_mmw_dry
+        /(cp_dry - 1.)/this->molecularWeight(i);
   }
 
 protected:

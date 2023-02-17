@@ -1,8 +1,9 @@
 #include <iostream>
-#include <vapor.hpp>
 #include <debugger.hpp>
 #include <mesh/mesh.hpp>
 #include <cantera/thermo/IdealGasPhase.h>
+#include <vapor.hpp>
+#include <condensates.hpp>
 //#include <cantera/base/Solution.h>
 
 int main() {
@@ -34,6 +35,7 @@ int main() {
 
   //Vapor *pvapor = new Vapor(pmesh->my_blocks(0), pinput);
   auto pvapor = new Vapor<Cantera::IdealGasPhase>(pinput);
+  //auto ptracer = new Tracer<Cantera::IdealGasPhase>(pinput);
 
   std::cout << "Number of species = ";
   std::cout << pvapor->nSpecies() << std::endl;

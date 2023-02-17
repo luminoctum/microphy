@@ -34,10 +34,11 @@ ox3_bc        = periodic  # Outer-X3 boundary condition flag
 <hydro>
 gamma         = 1.4   # gamma = C_p/C_v
 vapors        = H2:1.0;He:0.157;CH4:2.37E-3, H2O:0.01
-clouds        = H2O(l), H2O(s), NH3(l), NH3(s), H2O(l):rain, H2O(s):snow, NH3(l):rain, NH3(s):snow
 
 <chemistry>
 kinetics_file = jupiter_h2o.yaml
+condensates   = cloud, precipitation
+interfaces    = vapor:cloud, vapor:precipitation
 
 <problem>
 Ts            = 600.
