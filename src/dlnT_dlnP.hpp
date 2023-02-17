@@ -4,14 +4,19 @@
 #include <configure.hpp>
 #include "dimensionless_thermo.hpp"
 
-/*! Moist adiabatic lapse rate
+/** Moist adiabatic lapse rate
  *
  * Calculate moist adiabatic lapse rate according to @cite li2018
  * @param q an array of [T,q1,q2,...,qn,P,q11,q12,q21,q22,...,qn1,qn2]
- * @param isat indicator array of saturated or not
  * @param rcp molar cp ratios with respect to dry air
  */
-inline Real dlnTdlnP(Real const q[], int const isat[], DimensionlessThermo const thermo[], Real gamma)
+
+template<typename T>
+Real getMoistDlnTDlnP(
+  Vapor<T> const *pvapor
+  );
+
+Real dlnTdlnP(Real const q[], int const isat[], DimensionlessThermo const thermo[], Real gamma)
 {
   Real f_sig = 1.;
   // mass cp ratio to molar cp ratio

@@ -8,6 +8,7 @@
 #include <parameter_input.hpp>
 #include <cantera/base/stringUtils.h>
 #include <cantera/thermo.h>
+#include <cantera/kinetics.h>
 
 template<typename BasePhase>
 class Vapor : public BasePhase
@@ -60,6 +61,27 @@ public:
     return cp/cv;
   }
 
+  // to test whether a vapor is saturated
+  // we test saturation by adding small amount of condensates
+  void setSaturationIndicator(Cantera::Kinetics &kin) {
+    size_t nphases = kin.nPhases();
+
+    if (m_wdot.size() < kin.nTotalSpecies()) {
+      m_wdot.resize(kin.nTotalSpecies());
+    }
+
+    kin.getNetProductionRates(m_wdot.data());
+    for (int i = 1; i <= NumVapors; ++i) {
+      std::string name = this->speciesName(i);
+      size_t j = kin.kineticsSpeciesIndex(name);
+      if (m_wdot[j] > 0.) {
+        m_isat[i] = false;
+      } else {
+        m_isat[i] = true;
+      }
+    }
+  }
+
   // only works for ideal gas
   template<typename T>
   Real getTemp(T w) const {
@@ -105,6 +127,15 @@ protected:
   Real                          m_mmw_dry;
   std::array<Real,1+NumVapors>  m_molwt_ratios;
   std::array<Real,1+NumVapors>  m_cv_mass_ratios;
+
+  //! scract arrays, net Production rate
+  std::vector<Real>             m_wdot;
+
+  //! latent heat of condensation in J/(kmol)
+  Real                          m_molar_latent_heat;
+
+  //! m_isat is an indicator array of whether vapor i is saturated or not
+  std::array<bool,1+NumVapors>  m_isat;
 };
 
 #endif
