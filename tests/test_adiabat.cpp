@@ -40,6 +40,8 @@ int main() {
   auto cloud = Cantera::newPhase(kinfile, "cloud");
   auto kincond = Cantera::newKinetics({surface, vapor, cloud}, kinfile, "vapor:cloud");
 
+  vapor->setState_TP(300., 1.E5);
+
   // set small amount of trial condensates
   std::vector<Real> ysmall(cloud->nSpecies());
   std::fill(ysmall.begin(), ysmall.end(), 1.E-6);
