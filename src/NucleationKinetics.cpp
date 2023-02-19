@@ -24,7 +24,6 @@ void NucleationKinetics::updateROP()
     std::cout << m_conc[i] << " ";
   std::cout << std::endl;
 
-
   // loop over interface rates evaluator
   for (auto& rates : m_interfaceRates) {
     bool changed = rates->update(thermo(surfacePhaseIndex()), *this);
@@ -46,9 +45,9 @@ void NucleationKinetics::updateROP()
   for (size_t i = 0; i < nReactions(); i++) {
     // Scale the base forward rate coefficient by the perturbation factor
     m_ropf[i] = m_rfn[i] * m_perturb[i];
-    // Multiply the scaled forward rate coefficient by the reciprocal of the
-    // equilibrium constant
-    m_ropr[i] = m_ropf[i] * m_rkcn[i];
+    // Reverse reaction has the same rate constant, m_rkcn = 1
+    //m_ropr[i] = m_ropf[i] * m_rkcn[i];
+    m_ropr[i] = m_ropf[i];
   }
 
   // multiply ropf by the activity concentration reaction orders to obtain
@@ -62,6 +61,10 @@ void NucleationKinetics::updateROP()
   for (size_t j = 0; j != nReactions(); ++j) {
     m_ropnet[j] = m_ropf[j] - m_ropr[j];
   }
+
+  /*for (int i = 0; i < nReactions(); i++) {
+    std::cout << m_ropf[i] << " " << m_ropr[i] << std::endl;
+  }*/
 
   m_ROP_ok = true;
 }

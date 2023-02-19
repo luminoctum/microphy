@@ -44,7 +44,7 @@ int main() {
   //auto cloud = Cantera::newPhase(kinfile, "cloud");
   auto kincond = Cantera::newKinetics({surface, vapor, cloud}, kinfile, "vapor:cloud");
 
-  vapor->setState_TP(500., 1.E5);
+  vapor->setState_TP(200., 1.E5);
 
   // set small amount of trial condensates
   Real ym[2] = {1., 2.};

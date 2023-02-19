@@ -99,18 +99,17 @@ public:
   void setSaturationIndicator(Cantera::Kinetics &kin) {
     size_t nphases = kin.nPhases();
 
-    if (m_actConc.size() < kin.nTotalSpecies()) {
-      m_actConc.resize(kin.nTotalSpecies());
+    if (m_wdot.size() < kin.nTotalSpecies()) {
+      m_wdot.resize(kin.nTotalSpecies());
     }
 
-    kin.getNetProductionRates(m_actConc.data());
-    for (int i = 0; i < kin.nTotalSpecies(); ++i)
-      std::cout << m_actConc[i] << std::endl;
+    kin.getNetProductionRates(m_wdot.data());
+    //for (int i = 0; i < kin.nTotalSpecies(); ++i)
+    //  std::cout << m_wdot[i] << std::endl;
     for (int i = 1; i <= NumVapors; ++i) {
       std::string name = this->speciesName(nDryMixtures() + i - 1);
-      std::cout << name << std::endl;
       size_t j = kin.kineticsSpeciesIndex(name);
-      if (m_actConc[j] > 0.) {
+      if (m_wdot[j] > 0.) {
         m_isat[i] = false;
       } else {
         m_isat[i] = true;
@@ -172,8 +171,8 @@ protected:
   //! mass heat capacity ratios at constant volume
   mutable std::array<Real,1+NumVapors>  m_cv_ratios_mass;
 
-  //! scract arrays, activity concentration
-  std::vector<Real>             m_actConc;
+  //! scract arrays, production rate
+  std::vector<Real>             m_wdot;
 
   //! latent heat of condensation in J/(kmol)
   Real                          m_molar_latent_heat;
