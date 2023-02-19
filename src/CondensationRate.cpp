@@ -28,7 +28,7 @@ bool CondensationData::update(const ThermoPhase& phase, const Kinetics& kin)
 }
 
 // [conc] = kmol/m^3
-void CondensationRate::getActivityConcentration(double *actConc,
+void CondensationRate::reviseActivityConcentration(double *actConc,
   double const *conc, CondensationData const& shared_data)
 {
   double svp = saturation_vapor_pressure(shared_data.temperature);

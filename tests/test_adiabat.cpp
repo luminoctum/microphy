@@ -2,10 +2,12 @@
 #include <debugger.hpp>
 #include <mesh/mesh.hpp>
 #include <vapor.hpp>
+#include <suspension.hpp>
 #include <condensates.hpp>
 #include <cantera/thermo.h>
 #include <cantera/kinetics.h>
 #include <cantera/thermo/IdealGasPhase.h>
+#include <cantera/thermo/IdealSolidSolnPhase.h>
 //#include <cantera/base/Solution.h>
 
 int main() {
@@ -37,16 +39,18 @@ int main() {
   std::string kinfile = pinput->GetString("chemistry", "kinetics_file");
   auto surface = Cantera::newPhase(kinfile, "vapor:cloud");
   auto vapor = new Vapor<Cantera::IdealGasPhase>(pinput);
-  auto cloud = Cantera::newPhase(kinfile, "cloud");
+  auto cloud = new Suspension<Cantera::IdealGasPhase,
+    Cantera::IdealSolidSolnPhase>(pinput, vapor, "cloud");
+  //auto cloud = Cantera::newPhase(kinfile, "cloud");
   auto kincond = Cantera::newKinetics({surface, vapor, cloud}, kinfile, "vapor:cloud");
 
-  vapor->setState_TP(300., 1.E5);
+  vapor->setState_TP(500., 1.E5);
 
   // set small amount of trial condensates
-  std::vector<Real> ysmall(cloud->nSpecies());
-  std::fill(ysmall.begin(), ysmall.end(), 1.E-6);
+  Real ym[2] = {1., 2.};
   cloud->setPressure(1.E5);
-  cloud->setMassFractions(ysmall.data());
+  cloud->setRelativeMole(1.E-6);
+  cloud->setMassFractions(ym);
 
   std::cout << "Total species = "
             << kincond->nTotalSpecies() << std::endl;
@@ -63,6 +67,9 @@ int main() {
   }
 
   vapor->setSaturationIndicator(*kincond);
+
+  for (int i = 1; i <= NumVapors; ++i)
+    std::cout << vapor->testSaturation(i) << std::endl;
 
   delete pinput;
   delete pmesh;

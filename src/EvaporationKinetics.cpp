@@ -34,7 +34,7 @@ void EvaporationKinetics::updateROP()
 
   // activity concentration
   for (auto& rates : m_interfaceRates) {
-    rates->getActivityConcentration(m_actConc.data(), m_conc.data());
+    rates->reviseActivityConcentration(m_actConc.data(), m_conc.data());
   }
 
   std::cout << "activity concentrations = " << std::endl;

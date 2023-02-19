@@ -12,10 +12,11 @@ void NucleationKinetics::updateROP()
   // set temperature of the surface surface to be the vapor phase temperature
   m_thermo[surfacePhaseIndex()]->setTemperature(m_vapor_phase->temperature());
 
-  // regular concentration
+  // regular concentration and activity concentration
   for (size_t n = 0; n < nPhases(); ++n) {
     ThermoPhase const* tp = m_thermo[n];
     tp->getConcentrations(m_conc.data() + m_start[n]);
+    tp->getActivityConcentrations(m_actConc.data() + m_start[n]);
   }
 
   std::cout << "concentrations = " << std::endl;
@@ -32,9 +33,9 @@ void NucleationKinetics::updateROP()
     }
   }
 
-  // activity concentration
+  // revise activity concentration
   for (auto& rates : m_interfaceRates) {
-    rates->getActivityConcentration(m_actConc.data(), m_conc.data());
+    rates->reviseActivityConcentration(m_actConc.data(), m_conc.data());
   }
 
   std::cout << "activity concentrations = " << std::endl;

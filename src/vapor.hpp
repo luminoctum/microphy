@@ -49,6 +49,7 @@ public:
       m_molwt_ratios[i] = this->molecularWeight(nDryMixtures() + i - 1)/m_dry_mmw;
     }
 
+    std::fill(m_isat.begin(), m_isat.end(), false);
     updateThermo();
     /*std::cout << this->m_cp0_R[0] << std::endl;
     std::cout << m_dry_mmw << std::endl;
@@ -89,20 +90,27 @@ public:
     return m_dry_cp_mole/(m_dry_cp_mole - 1.);
   }
 
+  bool testSaturation(int i) const {
+    return m_isat[i];
+  }
+
   // to test whether a vapor is saturated
   // we test saturation by adding small amount of condensates
   void setSaturationIndicator(Cantera::Kinetics &kin) {
     size_t nphases = kin.nPhases();
 
-    if (m_wdot.size() < kin.nTotalSpecies()) {
-      m_wdot.resize(kin.nTotalSpecies());
+    if (m_actConc.size() < kin.nTotalSpecies()) {
+      m_actConc.resize(kin.nTotalSpecies());
     }
 
-    kin.getNetProductionRates(m_wdot.data());
+    kin.getNetProductionRates(m_actConc.data());
+    for (int i = 0; i < kin.nTotalSpecies(); ++i)
+      std::cout << m_actConc[i] << std::endl;
     for (int i = 1; i <= NumVapors; ++i) {
-      std::string name = this->speciesName(i);
+      std::string name = this->speciesName(nDryMixtures() + i - 1);
+      std::cout << name << std::endl;
       size_t j = kin.kineticsSpeciesIndex(name);
-      if (m_wdot[j] > 0.) {
+      if (m_actConc[j] > 0.) {
         m_isat[i] = false;
       } else {
         m_isat[i] = true;
@@ -164,8 +172,8 @@ protected:
   //! mass heat capacity ratios at constant volume
   mutable std::array<Real,1+NumVapors>  m_cv_ratios_mass;
 
-  //! scract arrays, net Production rate
-  std::vector<Real>             m_wdot;
+  //! scract arrays, activity concentration
+  std::vector<Real>             m_actConc;
 
   //! latent heat of condensation in J/(kmol)
   Real                          m_molar_latent_heat;
