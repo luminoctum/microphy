@@ -33,6 +33,7 @@ ox3_bc        = periodic  # Outer-X3 boundary condition flag
 
 <hydro>
 gamma         = 1.4   # gamma = C_p/C_v
+grav_acc1     = -22
 vapors        = H2:1.0;He:0.157;CH4:2.37E-3, H2O:0.01
 
 <chemistry>

@@ -1,8 +1,27 @@
 #ifndef DLNT_DLNP_HPP
 #define DLNT_DLNP_HPP
 
-#include <configure.hpp>
-#include "dimensionless_thermo.hpp"
+#include <cantera/thermo/IdealGasPhase.h>
+#include <cantera/thermo/IdealSolidSolnPhase.h>
+#include <cantera/kinetics.h>
+
+#include "vapor.hpp"
+
+struct AtmConstructionMethod {
+  std::string type = "pseudo";
+  Real grav = 0.;
+  Real dlnp = 0.;
+  Real dz = 0.;
+  Real rdlnTdlnP = 1.;
+  Real adTdz = 0.;
+};
+
+template<typename VaporPhase, typename CloudPhase>
+Real dlnTdlnP(
+  Vapor<VaporPhase> *vapor,
+  Suspension<VaporPhase, CloudPhase> *cloud,
+  Cantera::Kinetics *kin
+  );
 
 /** Moist adiabatic lapse rate
  *
@@ -11,31 +30,43 @@
  * @param rcp molar cp ratios with respect to dry air
  */
 
-template<typename T>
-Real getMoistDlnTDlnP(
-  Vapor<T> const *pvapor
-  );
-
-Real dlnTdlnP(Real const q[], int const isat[], DimensionlessThermo const thermo[], Real gamma)
+// speciealization
+template<>
+Real dlnTdlnP(
+  Vapor<Cantera::IdealGasPhase> *vapor,
+  Suspension<Cantera::IdealGasPhase, Cantera::IdealSolidSolnPhase> *cloud,
+  Cantera::Kinetics *kin
+  )
 {
-  Real f_sig = 1.;
-  // mass cp ratio to molar cp ratio
-  for (int n = 1; n <= NumVapors; ++n)
-    f_sig += q[n]*(thermo[n].cp_ratio*thermo[n].mu_ratio - 1.);
-  Real cphat_ov_r = gamma/(gamma - 1.)*f_sig;
+  Real cp_gas = vapor->cp_mole();
+  Real cp_cloud = cloud->cp_mole()*cloud->getRelativeMole();
+  Real cphat_ov_r = (cp_gas + cp_cloud)/Cantera::GasConstant;
 
-  // vapor
-  Real xd = 1.;
-  for (int n = 1; n <= NumVapors; ++n) xd -= q[n];
+  // get mole fractions
+  std::vector<Real> mole_fractions;
+  vapor->getMoleFractions(mole_fractions.data());
+
+  Real xdry = 0.;
+  for (int i = 0; i < vapor->nDryMixtures(); ++i) xdry += mole_fractions[i];
 
   Real c1 = 0., c2 = 0., c3 = 0.;
-  for (int iv = 1; iv <= NumVapors; ++iv) {
-    if (isat[iv] > 0) {
+  vapor->setLatentHeats(kin);
+
+  for (int i = 1; i <= NumVapors; ++i) {
+    Real temperature = vapor->temperature();
+    Real eta = mole_fractions[vapor->nDryMixtures() + i - 1]/xdry;
+    Real beta = vapor->getLatentHeat_JouleKilomole(i)/(Cantera::GasConstant*temperature);
+
+    c1 += eta*beta;
+    c2 += eta*beta*beta;
+    c3 += eta;
+
+    /*if (isat[iv] > 0) {
       Real latent = thermo[iv].beta*thermo[iv].t3/q[idn] - thermo[iv].delta;
       c1 += q[iv]/xd*latent;
       c2 += q[iv]/xd*latent*latent;
     }
-    c3 += q[iv]/xd;
+    c3 += q[iv]/xd;*/
   }
 
   return (1. + c1)/(cphat_ov_r + (c2 + c1*c1)/(1. + c3));

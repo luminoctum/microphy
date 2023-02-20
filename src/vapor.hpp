@@ -40,6 +40,7 @@ public:
       m_dry_cp_mole += this->m_cp0_R[i]*this->moleFraction(i);
       ym += this->moleFraction(i);
     }
+
     m_dry_mmw /= ym;
     m_dry_cp_mole /= ym;
 
@@ -49,7 +50,7 @@ public:
       m_molwt_ratios[i] = this->molecularWeight(nDryMixtures() + i - 1)/m_dry_mmw;
     }
 
-    std::fill(m_isat.begin(), m_isat.end(), false);
+    std::fill(m_latent_heats.begin(), m_latent_heats.end(), 0.);
     updateThermo();
     /*std::cout << this->m_cp0_R[0] << std::endl;
     std::cout << m_dry_mmw << std::endl;
@@ -72,7 +73,7 @@ public:
 
   Real getCvRatio_mass(int n) const {
     return m_cv_ratios_mass[n];
-  }*/
+  }
 
   Real getGamma() const {
     return this->cp_mole()/this->cv_mole();
@@ -84,43 +85,60 @@ public:
 
   Real dry_cv_mass() const {
     return (m_dry_cp_mole - 1.)*Cantera::GasConstant/m_dry_mmw;
-  }
+  }*/
 
   Real getDryGamma() const {
     return m_dry_cp_mole/(m_dry_cp_mole - 1.);
   }
 
-  bool testSaturation(int i) const {
-    return m_isat[i];
+  size_t vaporIndex(std::string const& name) const {
+    return this->speciesIndex(name) - nDryMixtures() + 1;
+  }
+
+  std::string vaporName(size_t k) const {
+    return this->speciesName(k + nDryMixtures() - 1);
+  }
+
+  bool testSaturation(size_t k) const {
+    return m_latent_heats[k] > 0;
+  }
+
+  Real getLatentHeat_JouleKilomole(size_t k) const {
+    return m_latent_heats[k];
   }
 
   // to test whether a vapor is saturated
   // we test saturation by adding small amount of condensates
-  void setSaturationIndicator(Cantera::Kinetics &kin) {
-    size_t nphases = kin.nPhases();
+  // this function sets the latent heat variable
+  // if the vapor is not saturated, latent heat is 0. Otherwise, it is the enthalpy
+  // difference between vapor and cloud
+  void setLatentHeats(Cantera::Kinetics *kin) {
+    size_t nphases = kin->nPhases();
 
-    if (m_wdot.size() < kin.nTotalSpecies()) {
-      m_wdot.resize(kin.nTotalSpecies());
+    if (m_wdot.size() < kin->nTotalSpecies()) {
+      m_wdot.resize(kin->nTotalSpecies());
     }
 
-    kin.getNetProductionRates(m_wdot.data());
-    //for (int i = 0; i < kin.nTotalSpecies(); ++i)
-    //  std::cout << m_wdot[i] << std::endl;
+    if (m_deltaH.size() < kin->nReactions()) {
+      m_deltaH.resize(kin->nReactions());
+    }
+
+    kin->getNetProductionRates(m_wdot.data());
+    kin->getDeltaEnthalpy(m_deltaH.data());
+    Real deltaH = 0;
+    for (auto it = m_deltaH.begin(); it != m_deltaH.end(); ++it)
+      deltaH += *it;
     for (int i = 1; i <= NumVapors; ++i) {
       std::string name = this->speciesName(nDryMixtures() + i - 1);
-      size_t j = kin.kineticsSpeciesIndex(name);
+      size_t j = kin->kineticsSpeciesIndex(name);
       if (m_wdot[j] > 0.) {
-        m_isat[i] = false;
+        m_latent_heats[i] = 0.;
+        //m_isat[i] = false;
       } else {
-        m_isat[i] = true;
+        m_latent_heats[i] = deltaH;
+        //m_isat[i] = true;
       }
     }
-  }
-
-  // only works for ideal gas
-  template<typename T>
-  Real getTemp(T w) const {
-    return w[ipr]*this->meanMolecularWeight()/(w[idn]*Cantera::GasConstant);
   }
 
   //! Update the species reference state thermodynamic functions
@@ -135,7 +153,7 @@ public:
    *  concentration dependent information at the time the setMoleFractions()
    *  (or equivalent) call is made.
    */
-  void updateThermo() const override {
+  void updateThermo() {
     BasePhase::updateThermo();
 
     Real ym = 0.;
@@ -155,12 +173,25 @@ public:
     }
   }
 
+  //! the following functions are for interaction with hydrodynamics
+  template<typename T> Real getGamma(T w) const;
+
+  template<typename T> Real getMeanMolecularWeight(T w) const;
+
+  //! only works for ideal gas
+  template<typename T> Real getTemp(T w) const;
+
+  template<typename T> Real getPres(T u) const;
+
+  template<typename T> Real getRovCp(T w) const;
+
+  template<typename T> Real cp_JouleKilogramK(T w) const;
+
+  template<typename T> Real cv_JouleKilogramK(T w) const;
+
 protected:
   //! mean molecular weight of dry gas
   Real                          m_dry_mmw;
-
-  //! dimensionless molar heat capacity at constant pressure of dry gas
-  mutable Real                  m_dry_cp_mole;
 
   //! number of dry species whose mixing ratios never change
   size_t                        m_num_dry_mixtures;
@@ -168,17 +199,22 @@ protected:
   //! molecular weight ratios between vapors and dry gas
   std::array<Real,1+NumVapors>  m_molwt_ratios;
 
+  //! dimensionless molar heat capacity at constant pressure of dry gas
+  Real                          m_dry_cp_mole;
+
   //! mass heat capacity ratios at constant volume
-  mutable std::array<Real,1+NumVapors>  m_cv_ratios_mass;
+  std::array<Real,1+NumVapors>  m_cv_ratios_mass;
+
+  //! mass heat capacity ratios at constant pressure
+  std::array<Real,1+NumVapors>  m_cp_ratios_mass;
 
   //! scract arrays, production rate
-  std::vector<Real>             m_wdot;
+  std::vector<Real>             m_wdot, m_deltaH;
 
-  //! latent heat of condensation in J/(kmol)
-  Real                          m_molar_latent_heat;
-
-  //! m_isat is an indicator array of whether vapor i is saturated or not
-  std::array<bool,1+NumVapors>  m_isat;
+  //! m_latent_heats stores the latent heat of a vapor if it condenses
+  std::array<Real,1+NumVapors>  m_latent_heats;
 };
+
+#include "vapor_hydro.hpp"
 
 #endif

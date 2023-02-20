@@ -1,7 +1,8 @@
 ## set up model configuration ##
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
-  set(CMAKE_BUILD_TYPE "DebugRelease")
+  #set(CMAKE_BUILD_TYPE "DebugRelease")
+  set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 # float point operation precision

@@ -21,6 +21,7 @@ foreach(_test ${_tests})
       ${ATHENAPP_INCLUDE_DIR}
       ${DEBUGGER_INCLUDE_DIR}
       ${CLIUTILS_INCLUDE_DIR}
+      ${CLIMATH_INCLUDE_DIR}
       ${MOLECULE_INCLUDE_DIR}
       ${MICROPHY_INCLUDE_DIR}
       ${EIGEN3_INCLUDE_DIR}
@@ -38,6 +39,7 @@ foreach(_test ${_tests})
       ${DEBUGGER_LIBRARY_${build}}
       ${MOLECULE_LIBRARY_${build}}
       ${MICROPHY_LIBRARY_${build}}
+      ${CLIMATH_LIBRAYR_${build}}
       ${CANTERA_LIBRARY}
       )
   endforeach()

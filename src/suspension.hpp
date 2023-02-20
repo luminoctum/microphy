@@ -24,11 +24,11 @@ public:
       (1./m_vapor->meanMolecularWeight() + mf/this->meanMolecularWeight());
   }
 
-  Real getMoleFraction() const {
+  Real getRelativeMole() const {
     return m_mole_ratio;
   }
 
-  Real getMassFraction() const {
+  Real getRelativeMass() const {
     return m_mass_ratio;
   }
 

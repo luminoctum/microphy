@@ -62,12 +62,4 @@ namespace Globals {
   extern int next_scalar_index;
 }
 
-enum {
-  ReferenceCloudPhase = @ReferenceCloudPhase@,
-  MaxReactants = 5
-};
-
-// hydrostatic flag
-#define HYDROSTATIC @Hydrostatic@
-
 #endif
