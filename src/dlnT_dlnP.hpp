@@ -43,7 +43,7 @@ Real dlnTdlnP(
   Real cphat_ov_r = (cp_gas + cp_cloud)/Cantera::GasConstant;
 
   // get mole fractions
-  std::vector<Real> mole_fractions;
+  std::vector<Real> mole_fractions(vapor->nSpecies());
   vapor->getMoleFractions(mole_fractions.data());
 
   Real xdry = 0.;
