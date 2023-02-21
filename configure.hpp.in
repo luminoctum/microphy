@@ -55,11 +55,4 @@ enum {
   ien = 4 + NumVapors,
 };
 
-// constants
-namespace Globals {
-  double const ReferencePressure = @ReferencePressure@;
-  double const PressureScaleHeight = @PressureScaleHeight@;
-  extern int next_scalar_index;
-}
-
 #endif

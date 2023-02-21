@@ -92,7 +92,7 @@ int main() {
   // mesh limits
   Real x1min = pmesh->mesh_size.x1min;
   Real x1max = pmesh->mesh_size.x1max;
-  Real H0 = Globals::PressureScaleHeight;
+  Real H0 = pinput->GetReal("mesh", "pscale_height");
 
   Real dlnp, **w1, *z1;
   dlnp = (x1max - x1min)/pmesh->mesh_size.nx1/(2.*H0);

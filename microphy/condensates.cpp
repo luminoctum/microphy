@@ -6,8 +6,6 @@
 #include <configure.hpp>
 #include "condensates.hpp"
 
-int Globals::next_scalar_index = 0;
-
 template<int NumTrackingFields>
 Condensates<NumTrackingFields>::Condensates(MeshBlock *pmb, ParameterInput *pin):
   SolutionGroup(

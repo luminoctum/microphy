@@ -54,16 +54,6 @@ if (${UseMPI})
   set(MPIOption MPI_PARALLEL)
 endif()
 
-# hydrostatic flag
-option(Hydrostatic "Use hydrostatic log-pressure grid" OFF)
-set(ReferencePressure 1.E5
-  CACHE STRING "Set hydrostatic reference pressure")
-set(PressureScaleHeight 30.E3
-  CACHE STRING "Set hydrostatic pressure scale height")
-
-set(ReferenceCloudPhase 2
-  CACHE STRING "Set reference cloud phase for latent heat")
-
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
   if (NOT "DEBUG" IN_LIST BUILD_TYPES)
     list(APPEND BUILD_TYPES "DEBUG")

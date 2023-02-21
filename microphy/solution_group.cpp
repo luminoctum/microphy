@@ -1,5 +1,6 @@
-#include <configure.hpp>
+#include <globals.hpp>
 #include <cliutils/vectorize.hpp>
+#include <configure.hpp>
 #include "solution_group.hpp"
 
 SolutionGroup::SolutionGroup(std::string kinetics_file, std::string solstrs):
