@@ -122,6 +122,7 @@ int main() {
     auto phydro = pmb->phydro;
     auto pcoord = pmb->pcoord;
 
+    std::cout << "I'm now constructing atmosphere" << std::endl << std::endl;
     ConstructAtmosphere(w1, nx1, method, vapor, cloud, kincond.get());
 
     // Change to log quantity

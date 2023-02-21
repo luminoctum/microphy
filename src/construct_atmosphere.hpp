@@ -43,7 +43,7 @@ void ConstructAtmosphere(Real **w, size_t len,
   std::cout << vapor->temperature() << std::endl;
   std::cout << vapor->pressure() << std::endl;
 
-  // set vapor mass fractions, density and pressure
+  // set density, vapor mass fractions and pressure
   vapor->getMassFractions(conc.data());
   w[0][idn] = vapor->density();
   for (int i = 1; i <= NumVapors; ++i)
@@ -68,10 +68,10 @@ void ConstructAtmosphere(Real **w, size_t len,
     }
 
     // set vapor mass fractions, density and pressure
-    vapor->getMassFractions(w[i]);
+    vapor->getMassFractions(conc.data());
     w[i][idn] = vapor->density();
-    for (int i = 1; i <= NumVapors; ++i)
-      w[0][i] = conc[vapor->nDryMixtures() + i - 1];
+    for (int j = 1; j <= NumVapors; ++j)
+      w[i][j] = conc[vapor->nDryMixtures() + j - 1];
     w[i][ipr] = vapor->pressure();
   }
 }

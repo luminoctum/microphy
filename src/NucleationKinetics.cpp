@@ -37,7 +37,7 @@ void NucleationKinetics::updateROP()
     rates->reviseActivityConcentration(m_actConc.data(), m_conc.data());
   }
 
-  std::cout << "activity concentrations = " << std::endl;
+  std::cout << "revised activity concentrations = " << std::endl;
   for (int i = 0; i < m_kk; ++i)
     std::cout << m_actConc[i] << " ";
   std::cout << std::endl;
