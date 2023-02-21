@@ -58,7 +58,7 @@ foreach(build ${BUILD_TYPES})
   mark_as_advanced(MICROPHY_LIBRARY_${build})
 endforeach()
 
-set(MICROPHY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+set(MICROPHY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..
   CACHE PATH 
   "microphy include directory")
 set(MICROPHY_FOUND TRUE CACHE BOOL "FIND MICROPHY LIBRARY")

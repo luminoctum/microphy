@@ -6,9 +6,9 @@
 #include <debugger.hpp>
 
 // microphy headers
-#include <vapor.hpp>
-#include <suspension.hpp>
-#include <construct_atmosphere.hpp>
+#include <microphy/vapor.hpp>
+#include <microphy/suspension.hpp>
+#include <microphy/construct_atmosphere.hpp>
 //#include <condensates.hpp>
 
 // cantera headers

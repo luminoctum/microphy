@@ -65,13 +65,6 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   set(HAS_EXTERNAL_LIBRARY TRUE)
 endif()
 
-# compile molecule
-if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
-  add_subdirectory(molecule)
-  message(STATUS "== Done.")
-  set(HAS_EXTERNAL_LIBRARY TRUE)
-endif()
-
 ## 6. set up compilation and installation ##
 if (HAS_EXTERNAL_LIBRARY)
   message(STATUS "")
@@ -80,7 +73,7 @@ message(STATUS "6. Set up project complication and installation ...")
 
 # configure file
 configure_file(${CMAKE_SOURCE_DIR}/configure.hpp.in configure.hpp @ONLY)
-add_subdirectory(src)
+add_subdirectory(microphy)
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   add_subdirectory(tests)
 endif()

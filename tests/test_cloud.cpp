@@ -2,8 +2,9 @@
 #include <debugger.hpp>
 #include <mesh/mesh.hpp>
 #include <cantera/thermo/IdealGasPhase.h>
-#include <vapor.hpp>
-#include <condensates.hpp>
+
+#include <microphy/vapor.hpp>
+#include <microphy/condensates.hpp>
 //#include <cantera/base/Solution.h>
 
 int main() {
