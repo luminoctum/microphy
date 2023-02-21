@@ -56,6 +56,7 @@ Real dlnTdlnP(
     Real temperature = vapor->temperature();
     Real eta = mole_fractions[vapor->nDryMixtures() + i - 1]/xdry;
     Real beta = vapor->getLatentHeat_JouleKilomole(i)/(Cantera::GasConstant*temperature);
+    std::cout << "beta = " << beta << std::endl;
 
     c1 += eta*beta;
     c2 += eta*beta*beta;

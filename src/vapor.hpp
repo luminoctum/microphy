@@ -123,6 +123,13 @@ public:
       m_deltaH.resize(kin->nReactions());
     }
 
+    std::vector<Real> hbar(this->nSpecies());
+    this->getPartialMolarEnthalpies(hbar.data());
+    std::cout << "enthalpies = ";
+    for (int i = 0; i < this->nSpecies(); ++i)
+      std::cout << hbar[i] << " ";
+    std::cout << std::endl;
+
     kin->getNetProductionRates(m_wdot.data());
     kin->getDeltaEnthalpy(m_deltaH.data());
     Real deltaH = 0;
@@ -135,7 +142,8 @@ public:
         m_latent_heats[i] = 0.;
         //m_isat[i] = false;
       } else {
-        m_latent_heats[i] = deltaH;
+        m_latent_heats[i] = -deltaH;
+        std::cout << ">>> I'm setting latent heat = " << -deltaH << " <<<" << std::endl;
         //m_isat[i] = true;
       }
     }

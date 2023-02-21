@@ -55,30 +55,36 @@ species:
   thermo:
     model: constant-cp
     cp0: 29.085 J/mol/K
+    T0: 298.15 K
 
 - name: He
   composition: {He: 1}
   thermo:
     model: constant-cp
     cp0: 20.775 J/mol/K
+    T0: 298.15 K
 
 - name: CH4
   composition: {C: 1, H: 4}
   thermo:
     model: constant-cp
     cp0: 37.395 J/mol/K
+    T0: 298.15 K
 
 - name: H2O
   composition: {H: 2, O: 1}
   thermo:
     model: constant-cp
     cp0: 37.395 J/mol/K
+    T0: 273.16 K
 
 - name: H2O(l)
   composition: {H: 2, O: 1}
   thermo:
     model: constant-cp
     cp0: 75.348 J/mol/K
+    T0: 273.16 K
+    h0: -45.054 kJ/mol
   equation-of-state:
     model: constant-volume
     density: 1.E3 kg/m^3
@@ -88,6 +94,8 @@ species:
   thermo:
     model: constant-cp
     cp0: 75.348 J/mol/K
+    T0: 273.16 K
+    h0: -45.054 kJ/mol
   equation-of-state:
     model: constant-volume
     density: 1.E3 kg/m^3
@@ -97,6 +105,8 @@ species:
   thermo:
     model: constant-cp
     cp0: 37.674 J/mol/K
+    T0: 273.16 K
+    h0: -51.066 kJ/mol
   equation-of-state:
     model: constant-volume
     density: 1.E3 kg/m^3
@@ -106,6 +116,8 @@ species:
   thermo:
     model: constant-cp
     cp0: 37.674 J/mol/K
+    T0: 273.16 K
+    h0: -51.066 kJ/mol
   equation-of-state:
     model: constant-volume
     density: 1.E3 kg/m^3
