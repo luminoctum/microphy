@@ -81,6 +81,16 @@ inline Real Vapor<Base>::cv_JouleKilogramK(T w) const {
   return 1./(gammad - 1.)*qsig*Cantera::GasConstant/m_dry_mmw;
 }
 
+//! Potential temperature
+template<typename Base>
+template<typename T>
+inline Real Vapor<Base>::getPotentialTemp(T w, Real p0) const {
+  Real chi = getRovCp(w);
+  Real temp = getTemp(w);
+  return temp*pow(p0/w[IPR], chi);
+}
+
+
 /*! h = c_{pd}*T*(1 + \sum_i (q_i*(\hat{c}_{pi} - 1.)))
 //!   = \gamma_d/(\gamma_d - 1.)*R_d*T*(1 + \sum_i (q_i*(\hat{c}_{pi} - 1.)))
 template<typename T>

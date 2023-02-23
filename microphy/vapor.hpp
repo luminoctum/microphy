@@ -67,7 +67,7 @@ public:
     return m_num_dry_mixtures;
   }
 
-  /*Real getMolecularWeightRatio(int n) const {
+  Real getMolecularWeightRatio(int n) const {
     return m_molwt_ratios[n];
   }
 
@@ -79,13 +79,17 @@ public:
     return this->cp_mole()/this->cv_mole();
   }
 
-  Real dry_cp_mass() const {
+  /*Real dry_cp_mass() const {
     return m_dry_cp_mole*Cantera::GasConstant/m_dry_mmw;
   }
 
   Real dry_cv_mass() const {
     return (m_dry_cp_mole - 1.)*Cantera::GasConstant/m_dry_mmw;
   }*/
+
+  Real dryMeanMolecularWeight() const {
+    return m_dry_mmw;
+  }
 
   Real getDryGamma() const {
     return m_dry_cp_mole/(m_dry_cp_mole - 1.);
@@ -192,6 +196,8 @@ public:
   template<typename T> Real getPres(T u) const;
 
   template<typename T> Real getRovCp(T w) const;
+
+  template<typename T> Real getPotentialTemp(T w, Real p0) const;
 
   template<typename T> Real cp_JouleKilogramK(T w) const;
 
